@@ -66,6 +66,18 @@ def period_stupid_search(data, guess):
     return best
 
 
+def remove_extremes(arr):
+    std = stats.mstats.trimmed_std(arr)
+    # Here, the trimmed std is used to get the std of the central 80%, because
+    # otherwise outliers skew the data to include themselves
+    median = np.nanmedian(arr)
+
+    thresh_lower = median - 5 * std
+    thresh_upper = median + 5 * std
+    print(str(((arr > thresh_upper) | (arr < thresh_lower)).sum()) + " eclipses dropped")
+    return arr[(arr < thresh_upper) & (arr > thresh_lower)]
+
+
 def getOC(eclipse, author="Vikram"):
     """Using estimated period and offset, get the O-C values
 
@@ -80,7 +92,8 @@ def getOC(eclipse, author="Vikram"):
     if author == "Vikram":
         period = period_stupid_search(eclipse['time'], eclipse['delta'].median())
         offset = (eclipse['time'] % period).median()
-    elif (author == "Yuan Xi"):
+    elif author == "Yuan Xi":
         period, offset = estimateConstantPeriod(eclipse['time'])
 
+    # return eclipse['time'] - offset - np.arange(len(eclipse['time'])) * period
     return eclipse['time'] % period - offset
