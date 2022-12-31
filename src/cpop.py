@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn import metrics
 
+
 def estimateConstantPeriod(timings):
     """Estimates the period and offset from eclipse timings
 
@@ -73,18 +74,6 @@ def period_stupid_search(data, deltas):
 
 def align_data(data, new_offset):
     return data - data[0] + new_offset
-
-
-def remove_extremes(arr):
-    std = stats.mstats.trimmed_std(arr)
-    # Here, the trimmed std is used to get the std of the central 80%, because
-    # otherwise outliers skew the data to include themselves
-    median = np.nanmedian(arr)
-
-    thresh_lower = median - 5 * std
-    thresh_upper = median + 5 * std
-    print(str(((arr > thresh_upper) | (arr < thresh_lower)).sum()) + " eclipses dropped")
-    return arr[(arr < thresh_upper) & (arr > thresh_lower)]
 
 
 def getOC(eclipse, author="Vikram"):

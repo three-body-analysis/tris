@@ -29,7 +29,7 @@ def remove_extremes(arr, col):
 
     mask = (arr[col] > thresh_upper) | (arr[col] < thresh_lower)
 
-    print(mask.sum(), "eclipses dropped.")
+    print(mask.sum(), "eclipses dropped")
     return arr[~mask]
 
 
