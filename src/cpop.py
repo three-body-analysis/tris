@@ -88,7 +88,7 @@ def remove_extremes(arr):
     return arr[(arr < thresh_upper) & (arr > thresh_lower)]
 
 
-def getOC(eclipse, author="Vikram"):
+def getOC(eclipse, author="Vikram", n_periods = 2):
     """Using estimated period and offset, get the O-C values
 
     Args:
