@@ -1,4 +1,5 @@
 import numpy as np
+from numpy.fft import *
 from scipy.stats import stats
 from sklearn.model_selection import train_test_split 
 from sklearn.linear_model import LinearRegression
@@ -80,7 +81,7 @@ def getOC(eclipse, author="Vikram"):
     """Using estimated period and offset, get the O-C values
 
     Args:
-        eclipse: Pandas DataFrame containing eclipse timings, duration, and delta (time till previous eclipse)
+        eclipses: Pandas DataFrame containing eclipse timings, duration, and delta (time till previous eclipse)
         author: The person who coded out the period searching function
 
     Returns:
@@ -88,10 +89,14 @@ def getOC(eclipse, author="Vikram"):
     """
     
     if author == "Vikram":
-        period = period_stupid_search(eclipse['time'], eclipse['delta'])
-        offset = (eclipse['time'] % period).median()
-    elif author == "Yuan Xi":  # this one is mathematically wrong, do not use unless very sure
-        period, offset = estimateConstantPeriod(eclipse['time'])
+        period = period_stupid_search(eclipses['time'], eclipses['delta'].median())
+        offset = (eclipses['time'] % period).median()
+    elif author == "Yuan Xi":
+        period, offset = estimateConstantPeriod(eclipses['time'])
 
-    # return eclipse['time'] - offset - np.arange(len(eclipse['time'])) * period
-    return eclipse['time'] % period - offset
+    if n_periods == 2:
+        period2 = fftfreq(eclipses['time'].size)[np.argmax(fft(eclipses['time'] % period - offset)[1:])]
+        return (eclipses['time'] % period - offset) % period2 - ((eclipses['time'] % period - offset) % period2).mean()
+
+    # return eclipses['time'] - offset - np.arange(len(eclipses['time'])) * period
+    return eclipses['time'] % period - offset
