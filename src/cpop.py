@@ -1,4 +1,5 @@
 import numpy as np
+from numpy.fft import *
 from sklearn.model_selection import train_test_split 
 from sklearn.linear_model import LinearRegression
 from sklearn import metrics
@@ -66,23 +67,11 @@ def period_stupid_search(data, guess):
     return best
 
 
-def remove_extremes(arr):
-    std = stats.mstats.trimmed_std(arr)
-    # Here, the trimmed std is used to get the std of the central 80%, because
-    # otherwise outliers skew the data to include themselves
-    median = np.nanmedian(arr)
-
-    thresh_lower = median - 5 * std
-    thresh_upper = median + 5 * std
-    print(str(((arr > thresh_upper) | (arr < thresh_lower)).sum()) + " eclipses dropped")
-    return arr[(arr < thresh_upper) & (arr > thresh_lower)]
-
-
-def getOC(eclipse, author="Vikram"):
+def getOC(eclipses, author="Vikram", n_periods = 2):
     """Using estimated period and offset, get the O-C values
 
     Args:
-        eclipse: Pandas DataFrame containing eclipse timings, duration, and delta (time till previous eclipse)
+        eclipses: Pandas DataFrame containing eclipse timings, duration, and delta (time till previous eclipse)
         author: The person who coded out the period searching function
 
     Returns:
@@ -90,10 +79,14 @@ def getOC(eclipse, author="Vikram"):
     """
     
     if author == "Vikram":
-        period = period_stupid_search(eclipse['time'], eclipse['delta'].median())
-        offset = (eclipse['time'] % period).median()
+        period = period_stupid_search(eclipses['time'], eclipses['delta'].median())
+        offset = (eclipses['time'] % period).median()
     elif author == "Yuan Xi":
-        period, offset = estimateConstantPeriod(eclipse['time'])
+        period, offset = estimateConstantPeriod(eclipses['time'])
 
-    # return eclipse['time'] - offset - np.arange(len(eclipse['time'])) * period
-    return eclipse['time'] % period - offset
+    if n_periods == 2:
+        period2 = fftfreq(eclipses['time'].size)[np.argmax(fft(eclipses['time'] % period - offset)[1:])]
+        return (eclipses['time'] % period - offset) % period2 - ((eclipses['time'] % period - offset) % period2).mean()
+
+    # return eclipses['time'] - offset - np.arange(len(eclipses['time'])) * period
+    return eclipses['time'] % period - offset
