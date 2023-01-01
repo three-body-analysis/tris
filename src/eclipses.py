@@ -1,8 +1,6 @@
 from astropy.table import Table
-from scipy import stats
 import matplotlib.pyplot as plt
 import wotan
-import numpy as np
 import pandas as pd
 
 
@@ -16,22 +14,6 @@ def get_threshold(median, std):
         # so if the threshold is too low you miss everything
     else:
         return median - 0.070  # Change this last bit
-
-
-def remove_extremes(arr, col):
-    std = stats.mstats.trimmed_std(arr[col])
-    # Here, the trimmed std is used to get the std of the central 80%, because
-    # otherwise outliers skew the data to include themselves
-    median = np.nanmedian(arr[col])
-
-    thresh_lower = median - 5 * std
-    thresh_upper = median + 5 * std
-
-    mask = (arr[col] > thresh_upper) | (arr[col] < thresh_lower)
-    herustic_mask = (arr[col] < median * 3)  # If it's not that high, don't drop it just yet
-
-    print(mask.sum(), "eclipses dropped")
-    return arr[(~mask) & herustic_mask]
 
 
 def get_eclipses(filename, data_path):
@@ -93,12 +75,6 @@ def get_eclipses(filename, data_path):
 
 
 def plot_eclipse_timings(eclipses):
-    fig1, ax1 = plt.subplots(figsize=(19.2, 10.8))
-    ax1.scatter(data=eclipses, x="time", y="delta", label="Untrimmed")
-
-    eclipses = remove_extremes(eclipses, "delta")
-    # Gets the trimmed std (central 80%) and drops all points that have deltas more than 5 sigma from the median
-
-    fig2, ax2 = plt.subplots(figsize=(19.2, 10.8))
-    ax2.scatter(data=eclipses, x="time", y="delta", label="Trimmed")
-    return fig1, ax1, fig2, ax2
+    fig, ax = plt.subplots(figsize=(19.2, 10.8))
+    ax.scatter(data=eclipses, x="time", y="delta")
+    return fig, ax
