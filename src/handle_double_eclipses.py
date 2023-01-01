@@ -1,8 +1,8 @@
 import numpy as np
 
 from eclipses import get_eclipses
-from src.noise_filtering import remove_extremes
-from src.eda.plot_eclipse_hists import plot_eclipse_hists
+from noise_filtering import remove_extremes
+from eda.plot_eclipse_hists import plot_eclipse_hists
 from utils.set_dir_to_root import set_dir_to_root
 
 

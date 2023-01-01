@@ -2,7 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from scipy import stats
 
-from src.eclipses import get_eclipses, plot_eclipse_timings
+from eclipses import get_eclipses, plot_eclipse_timings
 from utils.set_dir_to_root import set_dir_to_root
 
 
