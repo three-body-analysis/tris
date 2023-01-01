@@ -69,9 +69,10 @@ def get_eclipses(filename, data_path):
     eclipses = pd.DataFrame()
     eclipses["time"] = crossings["time"].rolling(
         window=pd.api.indexers.FixedForwardWindowIndexer(window_size=2)).mean()[::2]
-    eclipses["duration"] = (crossings["time"].shift(
-        periods=-1) - crossings["time"])[::2]
+    eclipses["duration"] = (crossings["time"].shift(periods=-1) - crossings["time"])[::2]
     eclipses["delta"] = eclipses["time"].shift(periods=-1) - eclipses["time"]
+    eclipses["time"] = eclipses["time"] - eclipses.loc[0, "time"] + 1
+    eclipses = eclipses[:-1]  # Last value will be NaN
 
     # the eclipse time is the average of the "start" and "stop" crossings,
     # the duration is less important but is the difference,
