@@ -1,12 +1,5 @@
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
-from src.eclipses import get_eclipses
-import os
-import sys
-
-from utils.get_root import get_project_root
-from utils.set_dir_to_root import set_dir_to_root
 
 
 def plot_eclipse_hists(eclipses):
