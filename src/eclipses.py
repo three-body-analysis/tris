@@ -28,9 +28,10 @@ def remove_extremes(arr, col):
     thresh_upper = median + 5 * std
 
     mask = (arr[col] > thresh_upper) | (arr[col] < thresh_lower)
+    herustic_mask = (arr[col] < median * 3)  # If it's not that high, don't drop it just yet
 
     print(mask.sum(), "eclipses dropped")
-    return arr[~mask]
+    return arr[(~mask) & herustic_mask]
 
 
 def get_eclipses(filename, data_path):
