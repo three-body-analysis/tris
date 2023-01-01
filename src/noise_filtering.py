@@ -1,6 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy import stats
+import seaborn as sns
 
 from src.eclipses import get_eclipses, plot_eclipse_timings
 from utils.set_dir_to_root import set_dir_to_root
@@ -8,9 +9,12 @@ from utils.set_dir_to_root import set_dir_to_root
 
 def remove_low_noise(eclipses, col):
     # Always, always, always do this first
-    threshold = 0.2
+    threshold = 0.25
     percentile_75 = np.nanpercentile(eclipses[col], 75)
-    return eclipses[eclipses[col] > percentile_75 * threshold]
+    mask = eclipses[col] > percentile_75 * threshold
+
+    print((~mask).sum(), "eclipses dropped by low filter")
+    return eclipses[mask]
 
 
 def remove_extremes(eclipses, col):
@@ -22,11 +26,11 @@ def remove_extremes(eclipses, col):
     thresh_lower = median - 5 * std
     thresh_upper = median + 5 * std
 
-    mask = (eclipses[col] > thresh_upper) | (eclipses[col] < thresh_lower)
+    mask = (eclipses[col] < thresh_upper) & (eclipses[col] > thresh_lower)
     herustic_mask = (eclipses[col] < median * 3)  # If it's not that high, don't drop it just yet
 
-    print(mask.sum(), "eclipses dropped")
-    return eclipses[(~mask) & herustic_mask]
+    print((~mask).sum(), "eclipses dropped by extreme filter")
+    return eclipses[mask & herustic_mask]
 
 
 def get_filtered_and_unfiltered(eclipses):
@@ -59,3 +63,6 @@ if __name__ == "__main__":
 
     fig2, ax2 = plot_eclipse_timings(eclipses)
     fig2.show()
+
+    sns.set_style("whitegrid")
+    sns.kdeplot(data=eclipses, x="delta", bw_adjust=0.2)

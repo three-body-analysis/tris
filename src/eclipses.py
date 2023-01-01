@@ -6,7 +6,7 @@ import pandas as pd
 
 def get_threshold(median, std):
     if std < 0.005:
-        return median - std * 3
+        return median - std * 4
     elif std < 0.05:
         return median - std * 1.4
         # I know this is discontinuous, but it actually works better.
@@ -74,7 +74,7 @@ def get_eclipses(filename, data_path):
     return eclipses
 
 
-def plot_eclipse_timings(eclipses):
-    fig, ax = plt.subplots(figsize=(19.2, 10.8))
+def plot_eclipse_timings(eclipses, dims=(19.2, 10.8)):
+    fig, ax = plt.subplots(figsize=dims)
     ax.scatter(data=eclipses, x="time", y="delta")
     return fig, ax
