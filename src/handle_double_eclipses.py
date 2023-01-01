@@ -34,8 +34,10 @@ def remove_doubles(eclipses):
         if abs(first - second) > 1 and (counts[first] < counts[second] * 2):
             # If they are not adjacent, and
             third = first + second
-            if counts[third] > sum(counts) / 50 or no_bins < 15:  # The second condition is arbitrary
+            if counts[third] > sum(counts) / 50:
                 combine = (True, first, second, third)  # The third is unused but is useful for debugging
+
+
 
     if combine[0]:
         primary = eclipses["delta"].min() + binwidth * (combine[1] + 0.5)  # Middle of the primary eclipse bin
