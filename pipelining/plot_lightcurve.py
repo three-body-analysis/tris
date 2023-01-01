@@ -2,7 +2,8 @@ from astropy.table import Table
 import matplotlib.pyplot as plt
 import wotan
 import numpy as np
-from get_threshold import get_threshold
+from src.eclipses import get_threshold
+from utils.set_dir_to_root import set_dir_to_root
 
 
 def plot_curves(filename, data_path):
@@ -34,10 +35,11 @@ def plot_curves(filename, data_path):
 
 
 if __name__ == "__main__":
+    set_dir_to_root()
     with open("data/all_systems.txt") as f:
         all_systems = f.read().split(",")
 
-    system_id = all_systems[3]
+    system_id = all_systems[92]
     # 19 is the funny high variability one, 4 is the fuzzy one
     # 9 looks like a friggin yak but I think that's fine
     # Ok looking at 10, we need a way to exclude extremely short period binaries, if they also have low variation

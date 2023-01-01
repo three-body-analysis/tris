@@ -7,20 +7,16 @@ from utils.set_dir_to_root import set_dir_to_root
 
 
 def remove_doubles(eclipses):
-    period_guess = eclipses["delta"].median()
-    if period_guess < 0.4:
-        print("This isn't necessarily applicable")
-        print("Be careful")
 
     binwidth = 0.15  # TODO This number is totally arbitrary, fine tuning required
     # TODO implement binning with an offset, to minimise spread. Very important
     no_bins = int((eclipses["delta"].max() - eclipses["delta"].min()) / binwidth)
-    if no_bins < 3:
+    if no_bins < 4:
         return False, eclipses  # Your data is super "tight" already, this is useless
 
     binwidth = (eclipses["delta"].max() - eclipses["delta"].min()) / no_bins  # This is the real binwidth
 
-    counts, edges = np.histogram(eclipses["delta"], bins=max(no_bins, 50))
+    counts, edges = np.histogram(eclipses["delta"], bins=max(no_bins, 20))
 
     idxs = np.argsort(counts)
 
@@ -36,8 +32,6 @@ def remove_doubles(eclipses):
             third = first + second
             if counts[third] > sum(counts) / 50:
                 combine = (True, first, second, third)  # The third is unused but is useful for debugging
-
-
 
     if combine[0]:
         primary = eclipses["delta"].min() + binwidth * (combine[1] + 0.5)  # Middle of the primary eclipse bin
