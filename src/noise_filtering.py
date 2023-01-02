@@ -42,13 +42,13 @@ def remove_outliers(eclipses, col, return_dropped=False):
 
 def get_filtered_and_unfiltered(eclipses):
     fig1, ax1 = plt.subplots(figsize=(19.2, 10.8))
-    ax1.scatter(data=eclipses, x="time", y="delta", label="Untrimmed")
+    ax1.scatter(data=eclipses, x="time", y="delta", label="Unfiltered")
 
     eclipses, diagnostics = complete_filter(eclipses, "delta", return_diagnositics=True)
     # Gets the trimmed std (central 80%) and drops all points that have deltas more than 5 sigma from the median
 
     fig2, ax2 = plt.subplots(figsize=(19.2, 10.8))
-    ax2.scatter(data=eclipses, x="time", y="delta", label="Trimmed")
+    ax2.scatter(data=eclipses, x="time", y="delta", label="Filtered")
     return fig1, ax1, fig2, ax2, diagnostics
 
 
@@ -62,9 +62,10 @@ def complete_filter(eclipses, col, return_diagnositics=True)\
     if return_diagnositics:
         if eclipses["delta"].median() > 1:
             eclipses, diagnostics[0] = remove_low_noise(eclipses, col, return_dropped=True)
-        eclipses, diagnostics[1] = remove_outliers(eclipses, col, return_dropped=True)
         eclipses, diagnostics[2] = remove_doubles(eclipses, col, return_handling_happened=True)
+        eclipses, diagnostics[1] = remove_outliers(eclipses, col, return_dropped=True)
         # TODO the int and bool at the end are for the KDE detection one, unfinished
+        # May want to swap double removal and outlier removal
 
         diagnostics = tuple(diagnostics)  # Exclusively for typing reasons
         diagnostics: Tuple[int, int, bool, int, bool]

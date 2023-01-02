@@ -13,7 +13,7 @@ if __name__ == "__main__":
     with open("data/all_systems.txt") as f:
         all_systems = f.read().split(",")
 
-    plotted_systems = all_systems[:12]
+    plotted_systems = all_systems[:100]
 
     # TODO if something breaks, remove this bit and see what it is
     warnings.filterwarnings('ignore', category=AstropyWarning, append=True)
@@ -26,5 +26,6 @@ if __name__ == "__main__":
         fig2, ax2, fig3, ax3, diagnostics = get_filtered_and_unfiltered(eclipses)
         fig1.savefig(f"generated/fluxes/{i}_flux", dpi=fig1.dpi, bbox_inches="tight")
         fig2.savefig(f"generated/deltas/{i}_deltas_raw", dpi=fig1.dpi, bbox_inches="tight")
-        fig3.savefig(f"generated/deltas/{i}_deltas_trimmed", dpi=fig1.dpi, bbox_inches="tight")
+        fig3.savefig(f"generated/deltas/{i}_deltas_filtered", dpi=fig1.dpi, bbox_inches="tight")
+        print(diagnostics)
         plt.close("all")
