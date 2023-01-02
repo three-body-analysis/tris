@@ -1,21 +1,15 @@
-from typing import Union, Iterable
-
 import numpy as np
-from numpy import ndarray
-
-from src.eclipses import get_eclipses
-from src.eda.plot_eclipse_hists import plot_eclipse_hists
-from utils.set_dir_to_root import set_dir_to_root
 
 
 def remove_doubles(eclipses, col, offset_attempts=21, return_handling_happened=True):
+    # offset_attempts should be an odd number, or else things get a bit funny
 
     binwidth = 0.12  # TODO This number is coarse, fine tuning required
 
     no_bins = int((eclipses[col].max() - eclipses[col].min()) / binwidth)
     if no_bins < 4:
         if return_handling_happened:
-            return False, eclipses  # Your data is super "tight" already, this is useless
+            return eclipses, False  # Your data is super "tight" already, this is useless
         return eclipses
 
     no_bins = max(no_bins, 20)
@@ -52,14 +46,11 @@ def remove_doubles(eclipses, col, offset_attempts=21, return_handling_happened=T
         second = idxs[j]
 
         # Note that counts[first] is always bigger than counts[second]
-        if abs(first - second) > 1 and (counts[first] < counts[second] * 2):
-            # If they are not adjacent, and
+        if abs(first - second) > 1 and (counts[first] < counts[second] * 2.5):
+            # If they are not adjacent, and are reasonably close together
             third = first + second
-            if counts[third] > sum(counts) / 50 or counts[first] < counts[second] * 1.3:
-                # If the third has a significant presence, or the first and second counts are very similar
-
-                combine = (True, first, second, third)  # The third is unused but is useful for debugging
-                break
+            combine = (True, first, second, third)  # The third is unused but is useful for debugging
+            break
 
     if combine[0]:
         primary = eclipses[col].min() + binwidth * (combine[1] + 0.5)  # Middle of the primary eclipse bin
