@@ -13,7 +13,7 @@ if __name__ == "__main__":
     with open("data/all_systems.txt") as f:
         all_systems = f.read().split(",")
 
-    plotted_systems = all_systems[:9]
+    plotted_systems = all_systems[:300]
 
     # TODO if something breaks, remove this bit and see what it is
     warnings.filterwarnings('ignore', category=AstropyWarning, append=True)

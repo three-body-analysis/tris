@@ -133,3 +133,4 @@ dmypy.json
 .idea/modules.xml
 .idea/ThreeBody2.iml
 .idea/vcs.xml
+generated
