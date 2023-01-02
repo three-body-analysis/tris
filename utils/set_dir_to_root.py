@@ -1,6 +1,6 @@
 import os
 
-from src.utils.get_root import get_project_root
+from utils.get_root import get_project_root
 
 
 # This is needed because of how I set up the relative file accessing

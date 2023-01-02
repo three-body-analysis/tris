@@ -5,6 +5,9 @@ import pandas as pd
 
 
 def get_threshold(median, std):
+
+    if std < 0.0025:
+        return median - std * 3
     if std < 0.005:
         return median - std * 4
     elif std < 0.05:

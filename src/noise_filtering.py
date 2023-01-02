@@ -4,7 +4,7 @@ from scipy import stats
 import seaborn as sns
 
 from eclipses import get_eclipses, plot_eclipse_timings
-from src.utils.set_dir_to_root import set_dir_to_root
+from utils.set_dir_to_root import set_dir_to_root
 
 
 def remove_low_noise(eclipses, col):
