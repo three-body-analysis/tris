@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import warnings
 from astropy.utils.exceptions import AstropyWarning
 
-from plot_lightcurve import plot_curves
+from pipelining.plot_lightcurve import plot_curves
 from src.eclipses import get_eclipses
 from src.noise_filtering import get_filtered_and_unfiltered
 from utils.set_dir_to_root import set_dir_to_root

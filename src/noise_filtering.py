@@ -62,10 +62,9 @@ def complete_filter(eclipses, col, return_diagnositics=True)\
     if return_diagnositics:
         if eclipses["delta"].median() > 1:
             eclipses, diagnostics[0] = remove_low_noise(eclipses, col, return_dropped=True)
-        eclipses, diagnostics[2] = remove_doubles(eclipses, col, return_handling_happened=True)
         eclipses, diagnostics[1] = remove_outliers(eclipses, col, return_dropped=True)
+        eclipses, diagnostics[2] = remove_doubles(eclipses, col, return_handling_happened=True)
         # TODO the int and bool at the end are for the KDE detection one, unfinished
-        # May want to swap double removal and outlier removal
 
         diagnostics = tuple(diagnostics)  # Exclusively for typing reasons
         diagnostics: Tuple[int, int, bool, int, bool]
