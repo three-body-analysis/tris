@@ -4,16 +4,7 @@ import wotan
 import numpy as np
 from glob import glob
 
-def get_threshold(median, std):
-    if std < 0.005:
-        return median - std * 3
-    elif std < 0.05:
-        return median - std * 1.4
-        # I know this is discontinuous, but it actually works better.
-        # A lot of curves with moderate deviations are just very periodic,
-        # so if the threshold is too low you miss everything
-    else:
-        return median - 0.070  # Change this last bit
+from src.eclipses import get_threshold
 
 
 def plot_curves(filename):
@@ -23,7 +14,7 @@ def plot_curves(filename):
     sap_fluxes = table["SAP_FLUX"]
 
     flattened_lc = wotan.flatten(times, sap_fluxes, window_length=0.5, method='biweight')
-    
+
     median = np.nanmedian(flattened_lc)
     std = np.nanstd(flattened_lc)
     threshold = get_threshold(median, std)

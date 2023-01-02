@@ -1,24 +1,28 @@
 import numpy as np
+import pandas as pd
 from matplotlib import pyplot as plt
 from scipy import stats
-import seaborn as sns
+from typing import List, Union, Tuple
 
-from src.eclipses import get_eclipses, plot_eclipse_timings
 from src.handle_double_eclipses import remove_doubles
-from utils.set_dir_to_root import set_dir_to_root
 
 
-def remove_low_noise(eclipses, col):
+def remove_low_noise(eclipses, col, return_dropped=False):
     # Always, always, always do this first
     threshold = 0.25
     percentile_75 = np.nanpercentile(eclipses[col], 75)
+
     mask = eclipses[col] > percentile_75 * threshold
+    mask: np.ndarray[bool]  # to stop a stupid warning
+
+    if return_dropped:
+        return eclipses[mask], (~mask).sum()
 
     print((~mask).sum(), "eclipses dropped by crude noise filter")
     return eclipses[mask]
 
 
-def remove_lower_extremes(eclipses, col):
+def remove_lower_extremes(eclipses, col, return_dropped=False):
     std = stats.mstats.trimmed_std(eclipses[col])
     # Here, the trimmed std is used to get the std of the central 80%, because
     # otherwise outliers skew the data to include themselves
@@ -28,15 +32,22 @@ def remove_lower_extremes(eclipses, col):
     thresh_upper = median + 5 * std
 
     mask = (eclipses[col] > thresh_lower)
+    mask: np.ndarray[bool]  # to stop a stupid warning
+    if return_dropped:
+        return eclipses[mask], (~mask).sum(), thresh_upper
 
     print((~mask).sum(), "eclipses dropped by extreme lower filter")
     return eclipses[mask], thresh_upper
 
 
-def remove_upper_extremes(eclipses, col, thresh_upper):
+def remove_upper_extremes(eclipses, col, thresh_upper, return_dropped=False):
     # Run this only after running both remove lower extremes
     # and also handle double eclipses
     mask = (eclipses[col] < thresh_upper)
+    mask: np.ndarray[bool]  # to stop a stupid warning
+    if return_dropped:
+        return eclipses[mask], (~mask).sum()
+
     print((~mask).sum(), "eclipses dropped by extreme upper filter")
     return eclipses[mask]
 
@@ -54,26 +65,30 @@ def get_filtered_and_unfiltered(eclipses):
     return fig1, ax1, fig2, ax2
 
 
-def complete_filter(eclipses, col):
-    eclipses = remove_low_noise(eclipses, "delta")
-    eclipses = remove_lower_extremes(eclipses, "delta")
+def complete_filter(eclipses, col, return_diagnositics=True)\
+        -> Union[pd.DataFrame, Tuple[pd.DataFrame, Tuple[int, int, bool, int, int, bool]]]:
+    # Yes, this stuff is confusing enough that I'm adding type hints
+    diagnostics = [0, 0, False, 0, 0, 0, False]
 
-    eclipses = remove_doubles(eclipses, "delta")
+    eclipses: pd.DataFrame
 
+    if return_diagnositics:
+        eclipses, diagnostics[0] = remove_low_noise(eclipses, col, return_dropped=True)
+        eclipses, diagnostics[1], thresh_upper = remove_lower_extremes(eclipses, col, return_dropped=True)
+        eclipses, diagnostics[2] = remove_doubles(eclipses, col, return_handling_happened=True)
+        eclipses, diagnostics[3] = remove_upper_extremes(eclipses, col, thresh_upper, return_dropped=True)
+        # TODO the int and bool at the end are for the KDE detection one, unfinished
 
-if __name__ == "__main__":
-    set_dir_to_root()
-    sns.set_style("whitegrid")
+        diagnostics = tuple(diagnostics)  # Exclusively for typing reasons
+        diagnostics: Tuple[int, int, bool, int, int, bool]
 
-    with open("data/all_systems.txt") as f:
-        all_systems = f.read().split(",")
+        return eclipses, diagnostics
 
-    system_id = all_systems[0]
+    # Yes I know this else is unnecessary, but it's neater
+    else:
+        eclipses = remove_low_noise(eclipses, col, return_dropped=False)
+        eclipses, thresh_upper = remove_lower_extremes(eclipses, col, return_dropped=False)
+        eclipses = remove_doubles(eclipses, col, return_handling_happened=False)
+        eclipses = remove_upper_extremes(eclipses, col, thresh_upper, return_dropped=False)
 
-    eclipses = get_eclipses(system_id, "data/combined")
-    fig1, ax1, fig2, ax2 = get_filtered_and_unfiltered(eclipses)
-
-    fig1.show()
-    fig2.show()
-
-    sns.kdeplot(data=eclipses, x="delta", bw_adjust=0.2)
+        return eclipses
