@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import wotan
 import numpy as np
 from src.eclipses import get_threshold
-from utils.set_dir_to_root import set_dir_to_root
+from src.utils.set_dir_to_root import set_dir_to_root
 
 
 def plot_curves(filename, data_path):

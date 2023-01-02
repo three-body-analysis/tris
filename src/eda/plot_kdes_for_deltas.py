@@ -9,7 +9,7 @@ from src.noise_filtering import remove_low_noise, remove_extremes
 
 import statsmodels.api as sm
 
-from utils.set_dir_to_root import set_dir_to_root
+from src.utils.set_dir_to_root import set_dir_to_root
 
 threshold = 0.1
 

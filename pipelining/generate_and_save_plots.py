@@ -5,7 +5,7 @@ from astropy.utils.exceptions import AstropyWarning
 from plot_lightcurve import plot_curves
 from src.eclipses import get_eclipses
 from src.noise_filtering import get_filtered_and_unfiltered
-from utils.set_dir_to_root import set_dir_to_root
+from src.utils.set_dir_to_root import set_dir_to_root
 
 if __name__ == "__main__":
     set_dir_to_root()

@@ -3,7 +3,7 @@ import numpy as np
 from eclipses import get_eclipses
 from noise_filtering import remove_extremes
 from eda.plot_eclipse_hists import plot_eclipse_hists
-from utils.set_dir_to_root import set_dir_to_root
+from src.utils.set_dir_to_root import set_dir_to_root
 
 
 def remove_doubles(eclipses, offset_attempts = 30, bin_cnt = 100):
