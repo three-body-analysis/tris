@@ -43,7 +43,7 @@ def remove_doubles(eclipses, col, offset_attempts=21, return_handling_happened=T
                                  range=(eclipses[col].min() - offset, eclipses[col].max() - offset + binwidth))
     # Recalculating because caching really is not worth the effort
 
-    idxs = np.argsort(counts)
+    idxs = np.argsort(counts)[::-1]
 
     combine = (False, None, None, None)  # Tuple storing if you combine or not, and which two to combine, what into
 
@@ -59,6 +59,7 @@ def remove_doubles(eclipses, col, offset_attempts=21, return_handling_happened=T
                 # If the third has a significant presence, or the first and second counts are very similar
 
                 combine = (True, first, second, third)  # The third is unused but is useful for debugging
+                break
 
     if combine[0]:
         primary = eclipses[col].min() + binwidth * (combine[1] + 0.5)  # Middle of the primary eclipse bin

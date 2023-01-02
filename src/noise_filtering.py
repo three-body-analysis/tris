@@ -29,20 +29,25 @@ def remove_lower_extremes(eclipses, col, return_dropped=False):
     median = np.nanmedian(eclipses[col])
 
     thresh_lower = median - 5 * std
-    thresh_upper = median + 5 * std
 
     mask = (eclipses[col] > thresh_lower)
     mask: np.ndarray[bool]  # to stop a stupid warning
     if return_dropped:
-        return eclipses[mask], (~mask).sum(), thresh_upper
+        return eclipses[mask], (~mask).sum()
 
     print((~mask).sum(), "eclipses dropped by extreme lower filter")
-    return eclipses[mask], thresh_upper
+    return eclipses[mask]
 
 
-def remove_upper_extremes(eclipses, col, thresh_upper, return_dropped=False):
+def remove_upper_extremes(eclipses, col, return_dropped=False):
     # Run this only after running both remove lower extremes
     # and also handle double eclipses
+
+    std = stats.mstats.trimmed_std(eclipses[col])
+    # Here, the trimmed std is used to get the std of the central 80%, because
+    # otherwise outliers skew the data to include themselves
+    median = np.nanmedian(eclipses[col])
+    thresh_upper = median + 5 * std
     mask = (eclipses[col] < thresh_upper)
     mask: np.ndarray[bool]  # to stop a stupid warning
     if return_dropped:
@@ -74,9 +79,9 @@ def complete_filter(eclipses, col, return_diagnositics=True)\
 
     if return_diagnositics:
         eclipses, diagnostics[0] = remove_low_noise(eclipses, col, return_dropped=True)
-        eclipses, diagnostics[1], thresh_upper = remove_lower_extremes(eclipses, col, return_dropped=True)
+        eclipses, diagnostics[1] = remove_lower_extremes(eclipses, col, return_dropped=True)
         eclipses, diagnostics[2] = remove_doubles(eclipses, col, return_handling_happened=True)
-        eclipses, diagnostics[3] = remove_upper_extremes(eclipses, col, thresh_upper, return_dropped=True)
+        eclipses, diagnostics[3] = remove_upper_extremes(eclipses, col, return_dropped=True)
         # TODO the int and bool at the end are for the KDE detection one, unfinished
 
         diagnostics = tuple(diagnostics)  # Exclusively for typing reasons
@@ -89,6 +94,6 @@ def complete_filter(eclipses, col, return_diagnositics=True)\
         eclipses = remove_low_noise(eclipses, col, return_dropped=False)
         eclipses, thresh_upper = remove_lower_extremes(eclipses, col, return_dropped=False)
         eclipses = remove_doubles(eclipses, col, return_handling_happened=False)
-        eclipses = remove_upper_extremes(eclipses, col, thresh_upper, return_dropped=False)
+        eclipses = remove_upper_extremes(eclipses, col, return_dropped=False)
 
         return eclipses

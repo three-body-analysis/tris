@@ -14,5 +14,3 @@ def plot_eclipse_hists(eclipses):
     plt.show()
 
     counts, edges = np.histogram(eclipses["delta"], bins=no_bins)
-    print(counts)
-    print(sum(counts))

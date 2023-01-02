@@ -5,7 +5,6 @@ import pandas as pd
 
 
 def get_threshold(median, std):
-    print(std)
     if std < 0.0005:  # Super, super low std, it's noise
         return median - std * 3.2
     elif std < 0.002:  # Very low std, it's not noise, it's just eclipsing
