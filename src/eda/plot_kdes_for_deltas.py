@@ -5,7 +5,7 @@ import numpy as np
 from astropy.utils.exceptions import AstropyWarning
 
 from src.eclipses import get_eclipses
-from src.noise_filtering import remove_low_noise, remove_extremes
+from src.noise_filtering import remove_low_noise, remove_lower_extremes
 
 import statsmodels.api as sm
 
@@ -29,7 +29,7 @@ if __name__ == "__main__":
         eclipses = get_eclipses(plotted_systems[i], "data/combined")
 
         half_filtered = remove_low_noise(eclipses, "delta")
-        half_filtered = remove_extremes(half_filtered, "delta")
+        half_filtered, thresh_upper = remove_lower_extremes(half_filtered, "delta")
 
         dens = sm.nonparametric.KDEUnivariate(half_filtered["delta"])
         dens.fit(adjust=0.2)  # 0.2 or 0.3
