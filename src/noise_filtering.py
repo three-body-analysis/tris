@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 from scipy import stats
 import seaborn as sns
 
-from eclipses import get_eclipses, plot_eclipse_timings
+from src.eclipses import get_eclipses, plot_eclipse_timings
 from utils.set_dir_to_root import set_dir_to_root
 
 

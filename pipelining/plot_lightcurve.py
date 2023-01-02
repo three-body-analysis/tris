@@ -2,7 +2,8 @@ from astropy.table import Table
 import matplotlib.pyplot as plt
 import wotan
 import numpy as np
-from src.eclipses import get_threshold
+from src.eclipses import get_threshold, get_eclipses
+from src.noise_filtering import get_filtered_and_unfiltered
 from utils.set_dir_to_root import set_dir_to_root
 
 
@@ -40,7 +41,7 @@ if __name__ == "__main__":
     with open("data/all_systems.txt") as f:
         all_systems = f.read().split(",")
 
-    system_id = all_systems[194]
+    system_id = all_systems[201]
     # 19 is the funny high variability one, 4 is the fuzzy one
     # 9 looks like a friggin yak but I think that's fine
     # Ok looking at 10, we need a way to exclude extremely short period binaries, if they also have low variation
@@ -53,4 +54,8 @@ if __name__ == "__main__":
     # We should also "weight" the eclipses. Eclipses only slightly below the threshold are given reduced priority, maybe
     print(system_id)
     fig, ax = plot_curves(system_id, "data/combined")
+    eclipses = get_eclipses(system_id, "data/combined")
+    fig2, ax2, fig3, ax3 = get_filtered_and_unfiltered(eclipses)
     fig.show()
+    fig2.show()
+    fig3.show()

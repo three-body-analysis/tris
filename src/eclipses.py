@@ -5,18 +5,20 @@ import pandas as pd
 
 
 def get_threshold(median, std):
-
-    if std < 0.0025:
+    print(std)
+    if std < 0.0005:  # Super, super low std, it's noise
         return median - std * 3
-    if std < 0.005:
+    elif std < 0.002:  # Very low std, it's not noise, it's just eclipsing
+        return median - std * 1.6
+    elif std < 0.005:  # Middling std, high noise
         return median - std * 4
-    elif std < 0.05:
+    elif std < 0.05:  # High std, it's too much for it to be noise
         return median - std * 1.4
+    else:  # If the std is really high then cap the threshold
+        return median - 0.070
         # I know this is discontinuous, but it actually works better.
         # A lot of curves with moderate deviations are just very periodic,
         # so if the threshold is too low you miss everything
-    else:
-        return median - 0.070  # Change this last bit
 
 
 def get_eclipses(filename, data_path):
