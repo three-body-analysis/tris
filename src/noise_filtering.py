@@ -38,14 +38,14 @@ def remove_high_noise(eclipses, col, return_dropped=False):
     return eclipses[mask]
 
 
-def remove_outliers(eclipses, col, return_dropped=False):
+def remove_outliers(eclipses, col, return_dropped=False, sigma=5):
     std = stats.mstats.trimmed_std(eclipses[col])
     # Here, the trimmed std is used to get the std of the central 80%, because
     # otherwise outliers skew the data to include themselves
-    median = wquantiles.median(eclipses[col], eclipses[col])  # This is dubious
+    median = np.nanmedian(eclipses[col])
 
-    thresh_lower = median - 5 * std
-    thresh_upper = median + 5 * std
+    thresh_lower = median - sigma * std
+    thresh_upper = median + sigma * std
 
     mask = (eclipses[col] > thresh_lower) & (eclipses[col] < thresh_upper)
     mask: np.ndarray[bool]  # to stop a stupid warning
