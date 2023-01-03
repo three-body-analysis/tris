@@ -20,7 +20,7 @@ sns.set_style("whitegrid")
 with open("data/all_systems.txt") as f:
     all_systems = f.read().split(",")
 
-system_id = all_systems[44] #44
+system_id = all_systems[13]  # 44
 eclipses = get_eclipses(system_id, "data/combined")
 
 plot_eclipse_hists(eclipses)

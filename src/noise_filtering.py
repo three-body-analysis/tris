@@ -14,6 +14,8 @@ def remove_low_noise(eclipses, col, return_dropped=False):
     percentile_75 = wquantiles.quantile(eclipses[col], eclipses[col], 0.75)
 
     mask: np.ndarray[bool] = eclipses[col] > percentile_75 * threshold
+    if np.mean(eclipses[col]) > 0.3:
+        mask = mask & (eclipses[col] > 0.1) # drop the garbage
 
     if return_dropped:
         return eclipses[mask], (~mask).sum()
@@ -84,13 +86,19 @@ def complete_filter(eclipses, col, return_diagnositics=True)\
 
         diagnostics: Tuple[int, int, bool, int, bool] = tuple(diagnostics)  # Exclusively for typing reasons
 
+        eclipses = eclipses.reset_index(drop=True)
+
         return eclipses, diagnostics
 
     # Yes I know this else is unnecessary, but it's neater
     else:
-        if np.nanpercentile(eclipses["delta"], 90) > 1 and stats.mstats.trimmed_std(eclipses["delta"]) > 1:
+        if wquantiles.quantile(eclipses[col], eclipses[col], 0.75) > 1 and stats.mstats.trimmed_std(eclipses["delta"]) > 0.7:
             eclipses = remove_low_noise(eclipses, col, return_dropped=False)
+        elif wquantiles.quantile(eclipses[col], eclipses[col], 0.75) > 1:
+            eclipses = remove_high_noise(eclipses, col, return_dropped=False)
         eclipses = remove_outliers(eclipses, col, return_dropped=False)
         eclipses = remove_doubles(eclipses, col, return_handling_happened=False)
+
+        eclipses = eclipses.reset_index(drop=True)
 
         return eclipses

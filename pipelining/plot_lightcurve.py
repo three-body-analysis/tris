@@ -41,7 +41,7 @@ if __name__ == "__main__":
     with open("data/all_systems.txt") as f:
         all_systems = f.read().split(",")
 
-    system_id = all_systems[201]
+    system_id = all_systems[11]
     # 19 is the funny high variability one, 4 is the fuzzy one
     # 9 looks like a friggin yak but I think that's fine
     # Ok looking at 10, we need a way to exclude extremely short period binaries, if they also have low variation
@@ -51,11 +51,11 @@ if __name__ == "__main__":
     # If we detect actually zero eclipses, or like 1-2, we can also make it try setting the threshold to like,
     # 1 std below the median instead. If that gives us a sane pattern, we can flag it tentatively
 
-    # We should also "weight" the eclipses. Eclipses only slightly below the threshold are given reduced priority, maybe
+    # If it doesn't work the first time, try a threshold of 1.2 sigma. "Work" meaning get a low std on the mod plot, alongside retaining at least 50% of points (weighted)
     print(system_id)
     fig, ax = plot_curves(system_id, "data/combined")
     eclipses = get_eclipses(system_id, "data/combined")
-    fig2, ax2, fig3, ax3 = get_filtered_and_unfiltered(eclipses)
+    fig2, ax2, fig3, ax3, _ = get_filtered_and_unfiltered(eclipses)
     fig.show()
     fig2.show()
     fig3.show()

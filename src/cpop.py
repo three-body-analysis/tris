@@ -5,6 +5,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn import metrics
 
+from src.handle_double_eclipses import close_to
+
 
 def estimateConstantPeriod(timings):
     """Estimates the period and offset from eclipse timings
@@ -41,7 +43,8 @@ def period_stupid_search(data, deltas):
 
     # The initial guess should be the median difference between eclipses
     # I still need to figure out how to handle systems with weird phases for secondary eclipses
-    guess = deltas.median()
+    initial_guess = deltas.median()
+    guess = initial_guess
     data = align_data(data, guess / 2)
 
     change = max(round(guess / 10, 1), 0.1) / guess
@@ -70,6 +73,7 @@ def period_stupid_search(data, deltas):
             guess = guess + change / 2
         change = change * 3 / 4
         count = count + 1
+    best = best * round(initial_guess / best, 0)
     return best
 
 
@@ -89,12 +93,13 @@ def getOC(eclipses, author="Vikram"):
     """
     
     if author == "Vikram":
-        period = period_stupid_search(eclipses['time'], eclipses['delta'].median())
+        period = period_stupid_search(eclipses['time'], eclipses['delta'])
     elif author == "Yuan Xi":
         period, offset = estimateConstantPeriod(eclipses['time'])
 
     else:
         raise ValueError("Author must be vikram or yuan xi")
 
-    # return eclipses['time'] - offset - np.arange(len(eclipses['time'])) * period
-    return align_data(eclipses['time'], period / 2) % period
+    # return  align_data(eclipses['time'], period / 2) % period, period
+
+    return period

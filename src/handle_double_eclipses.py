@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def remove_doubles(eclipses, col, offset_attempts=21, return_handling_happened=True):
+def remove_doubles(eclipses, col, offset_attempts=21, return_handling_happened=False):
     # offset_attempts should be an odd number, or else things get a bit funny
 
     binwidth = 0.12  # TODO This number is coarse, fine tuning required
@@ -46,25 +46,31 @@ def remove_doubles(eclipses, col, offset_attempts=21, return_handling_happened=T
         second = idxs[j]
 
         # Note that counts[first] is always bigger than counts[second]
-        if abs(first - second) > 1 and (counts[first] < counts[second] * 2.5):
+        if abs(first - second) > 1 and (counts[first] < counts[second] * 2.5)\
+                and not (close_to(first*2, second, binwidth*2) or close_to(first, second*2, binwidth*2)):
             # If they are not adjacent, and are reasonably close together
+            # But they aren't close to being doubles of one another
             third = first + second
             combine = (True, first, second, third)  # The third is unused but is useful for debugging
             break
 
     if combine[0]:
+        print("hi")
+        print(combine)
         primary = eclipses[col].min() + binwidth * (combine[1] + 0.5)  # Middle of the primary eclipse bin
         secondary = eclipses[col].min() + binwidth * (combine[2] + 0.5)
 
         eclipses["shifted"] = eclipses[col].shift(periods=-1)
         eclipses["to_sum"] = close_to(eclipses[col], primary,
-                                      binwidth / 2) & close_to(eclipses["shifted"], secondary, binwidth / 2)
+                                      binwidth * 1.5) & close_to(eclipses["shifted"], secondary, binwidth * 1.5)
         eclipses["to_drop"] = close_to(eclipses["shifted"], primary,
-                                       binwidth / 2) & close_to(eclipses[col], secondary, binwidth / 2)
+                                       binwidth * 1.5) & close_to(eclipses[col], secondary, binwidth * 1.5)
+        # binwidth * 1.5 rather than binwidth / 2 here because of error and stuff, it's weird
 
         eclipses.loc[eclipses["to_sum"], col] = eclipses[eclipses["to_sum"]][col] + \
                                                 eclipses[eclipses["to_sum"]]["shifted"]
 
+        print(sum(eclipses["to_drop"]))
         eclipses = eclipses[~eclipses["to_drop"]]
         eclipses = eclipses.drop(columns=["shifted", "to_sum", "to_drop"])
 

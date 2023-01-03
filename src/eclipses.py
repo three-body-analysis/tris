@@ -10,7 +10,7 @@ def get_threshold(median, std):
     elif std < 0.002:  # Very low std, it's not noise, it's just eclipsing
         return median - std * 1.6
     elif std < 0.005:  # Middling std, high noise
-        return median - std * 4
+        return median - std * 3.5
     elif std < 0.05:  # High std, it's too much for it to be noise
         return median - std * 1.4
     else:  # If the std is really high then cap the threshold
