@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     with open("data/all_systems.txt") as f:
         all_systems = f.read().split(",")
-    i=11
+    i = 98
 
     # TODO if something breaks, remove this bit and see what it is
     warnings.filterwarnings('ignore', category=AstropyWarning, append=True)

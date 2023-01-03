@@ -77,7 +77,7 @@ def align_data(data, new_offset):
     return data - data[0] + new_offset
 
 
-def getOC(eclipses, author="Vikram", n_periods = 2):
+def getOC(eclipses, author="Vikram"):
     """Using estimated period and offset, get the O-C values
 
     Args:
@@ -90,13 +90,11 @@ def getOC(eclipses, author="Vikram", n_periods = 2):
     
     if author == "Vikram":
         period = period_stupid_search(eclipses['time'], eclipses['delta'].median())
-        offset = (eclipses['time'] % period).median()
     elif author == "Yuan Xi":
         period, offset = estimateConstantPeriod(eclipses['time'])
 
-    if n_periods == 2:
-        period2 = fftfreq(eclipses['time'].size)[np.argmax(fft(eclipses['time'] % period - offset)[1:])]
-        return (eclipses['time'] % period - offset) % period2 - ((eclipses['time'] % period - offset) % period2).mean()
+    else:
+        raise ValueError("Author must be vikram or yuan xi")
 
     # return eclipses['time'] - offset - np.arange(len(eclipses['time'])) * period
-    return eclipses['time'] % period - offset
+    return align_data(eclipses['time'], period / 2) % period

@@ -20,7 +20,7 @@ sns.set_style("whitegrid")
 with open("data/all_systems.txt") as f:
     all_systems = f.read().split(",")
 
-system_id = all_systems[6]
+system_id = all_systems[44] #44
 eclipses = get_eclipses(system_id, "data/combined")
 
 plot_eclipse_hists(eclipses)
@@ -49,3 +49,4 @@ ax.plot(x, y)
 # ax.plot(plt.axis()[:2], [threshold, threshold], "-b", linewidth=3)
 
 fig.show()
+
