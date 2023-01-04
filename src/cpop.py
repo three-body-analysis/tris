@@ -56,7 +56,7 @@ def period_stupid_search(data, deltas):
     bestval = distance_metric(data % guess, guess)
 
     count = 0
-    while count < 100 and change > 1e-8:
+    while count < 100 and change > 1e-9:
         probes = np.linspace(guess - guess * change, guess + guess * change, no_probes)
         results = np.mod(np.broadcast_to(data, (max_dim, no_probes)), probes)
 
@@ -71,7 +71,7 @@ def period_stupid_search(data, deltas):
             guess = guess - change / 2
         elif seed > no_probes // 2:
             guess = guess + change / 2
-        change = change * 3 / 4
+        change = change * 0.84
         count = count + 1
     best = best * round(initial_guess / best, 0)
     return best

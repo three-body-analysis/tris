@@ -55,8 +55,6 @@ def remove_doubles(eclipses, col, offset_attempts=21, return_handling_happened=F
             break
 
     if combine[0]:
-        print("hi")
-        print(combine)
         primary = eclipses[col].min() + binwidth * (combine[1] + 0.5)  # Middle of the primary eclipse bin
         secondary = eclipses[col].min() + binwidth * (combine[2] + 0.5)
 
@@ -70,7 +68,6 @@ def remove_doubles(eclipses, col, offset_attempts=21, return_handling_happened=F
         eclipses.loc[eclipses["to_sum"], col] = eclipses[eclipses["to_sum"]][col] + \
                                                 eclipses[eclipses["to_sum"]]["shifted"]
 
-        print(sum(eclipses["to_drop"]))
         eclipses = eclipses[~eclipses["to_drop"]]
         eclipses = eclipses.drop(columns=["shifted", "to_sum", "to_drop"])
 

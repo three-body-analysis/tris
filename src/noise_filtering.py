@@ -4,8 +4,10 @@ from matplotlib import pyplot as plt
 from scipy import stats
 from typing import List, Union, Tuple
 import wquantiles
+import statsmodels.api as sm
 
 from src.handle_double_eclipses import remove_doubles
+from utils.expand_mask import expand_mask
 
 
 def remove_low_noise(eclipses, col, return_dropped=False):
@@ -56,6 +58,26 @@ def remove_outliers(eclipses, col, return_dropped=False, sigma=5):
     return eclipses[mask]
 
 
+def remove_low_density(eclipses, col, return_dropped=False):
+    dens = sm.nonparametric.KDEUnivariate(eclipses[col])
+    dens.fit(adjust=0.25)  # 0.2 to 0.3
+    x = np.linspace(0, eclipses[col].max(), 1000)
+    y = dens.evaluate(x) * x
+    thresh = np.max(y) / 3
+    mask = y >= thresh
+    mask = expand_mask(mask, 2)
+    mask = np.argwhere(mask)
+
+    eclipses["normed_deltas"] = (eclipses[col] / eclipses[col].max() * 1000).round() - 1
+    mask = np.isin(eclipses["normed_deltas"], mask)
+
+    if return_dropped:
+        return eclipses[mask], (~mask).sum()
+
+    print((~mask).sum(), "eclipses dropped by density filter")
+    return eclipses[mask]
+
+
 def get_filtered_and_unfiltered(eclipses):
     fig1, ax1 = plt.subplots(figsize=(19.2, 10.8))
     ax1.scatter(data=eclipses, x="time", y="delta", label="Unfiltered")
@@ -69,9 +91,9 @@ def get_filtered_and_unfiltered(eclipses):
 
 
 def complete_filter(eclipses, col, return_diagnositics=True)\
-        -> Union[pd.DataFrame, Tuple[pd.DataFrame, Tuple[int, int, bool, int, bool]]]:
+        -> Union[pd.DataFrame, Tuple[pd.DataFrame, Tuple[int, int, bool, int]]]:
     # Yes, this stuff is confusing enough that I'm adding type hints
-    diagnostics: List = [0, 0, False, 0, False]
+    diagnostics: List = [0, 0, False, 0]
 
     eclipses: pd.DataFrame
 
@@ -82,9 +104,10 @@ def complete_filter(eclipses, col, return_diagnositics=True)\
             eclipses, diagnostics[0] = remove_high_noise(eclipses, col, return_dropped=True)
         eclipses, diagnostics[1] = remove_outliers(eclipses, col, return_dropped=True)
         eclipses, diagnostics[2] = remove_doubles(eclipses, col, return_handling_happened=True)
+        eclipses, diagnostics[3] = remove_low_density(eclipses, col, return_dropped=True)
         # TODO the int and bool at the end are for the KDE detection one, unfinished
 
-        diagnostics: Tuple[int, int, bool, int, bool] = tuple(diagnostics)  # Exclusively for typing reasons
+        diagnostics: Tuple[int, int, bool, int] = tuple(diagnostics)  # Exclusively for typing reasons
 
         eclipses = eclipses.reset_index(drop=True)
 
@@ -98,6 +121,7 @@ def complete_filter(eclipses, col, return_diagnositics=True)\
             eclipses = remove_high_noise(eclipses, col, return_dropped=False)
         eclipses = remove_outliers(eclipses, col, return_dropped=False)
         eclipses = remove_doubles(eclipses, col, return_handling_happened=False)
+        eclipses = remove_low_density(eclipses, col, return_dropped=False)
 
         eclipses = eclipses.reset_index(drop=True)
 

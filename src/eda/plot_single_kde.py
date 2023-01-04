@@ -5,7 +5,7 @@ import numpy as np
 from astropy.utils.exceptions import AstropyWarning
 
 from src.eclipses import get_eclipses
-from src.noise_filtering import complete_filter
+from src.noise_filtering import complete_filter, remove_low_density
 
 import statsmodels.api as sm
 
