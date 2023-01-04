@@ -60,12 +60,12 @@ def remove_outliers(eclipses, col, return_dropped=False, sigma=5):
 
 def remove_low_density(eclipses, col, return_dropped=False):
     dens = sm.nonparametric.KDEUnivariate(eclipses[col])
-    dens.fit(adjust=0.25)  # 0.2 to 0.3
+    dens.fit(adjust=0.3)  # 0.2 to 0.3
     x = np.linspace(0, eclipses[col].max(), 1000)
     y = dens.evaluate(x) * x
-    thresh = np.max(y) / 3
+    thresh = np.max(y) * 0.25
     mask = y >= thresh
-    mask = expand_mask(mask, 2)
+    mask = expand_mask(mask, 3)
     mask = np.argwhere(mask)
 
     eclipses["normed_deltas"] = (eclipses[col] / eclipses[col].max() * 1000).round() - 1
@@ -102,9 +102,13 @@ def complete_filter(eclipses, col, return_diagnositics=True)\
             eclipses, diagnostics[0] = remove_low_noise(eclipses, col, return_dropped=True)
         elif wquantiles.quantile(eclipses[col], eclipses[col], 0.75) > 1:
             eclipses, diagnostics[0] = remove_high_noise(eclipses, col, return_dropped=True)
+        backup = eclipses.copy()
         eclipses, diagnostics[1] = remove_outliers(eclipses, col, return_dropped=True)
+        if eclipses.empty:
+            eclipses = backup
+            diagnostics[1] = -1
         eclipses, diagnostics[2] = remove_doubles(eclipses, col, return_handling_happened=True)
-        eclipses, diagnostics[3] = remove_low_density(eclipses, col, return_dropped=True)
+        #eclipses, diagnostics[3] = remove_low_density(eclipses, col, return_dropped=True)
         # TODO the int and bool at the end are for the KDE detection one, unfinished
 
         diagnostics: Tuple[int, int, bool, int] = tuple(diagnostics)  # Exclusively for typing reasons

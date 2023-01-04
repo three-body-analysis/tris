@@ -5,7 +5,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn import metrics
 
+from src.cull_oscillations import cull_oscillations
 from src.handle_double_eclipses import close_to
+from src.noise_filtering import complete_filter
 
 
 def estimateConstantPeriod(timings):
@@ -47,8 +49,8 @@ def period_stupid_search(data, deltas):
     guess = initial_guess
     data = align_data(data, guess / 2)
 
-    change = max(round(guess / 10, 1), 0.1) / guess
-    no_probes = 51
+    change = 0.1
+    no_probes = 101
     max_dim = len(data)
     data = np.expand_dims(data, 1)
 
@@ -56,7 +58,7 @@ def period_stupid_search(data, deltas):
     bestval = distance_metric(data % guess, guess)
 
     count = 0
-    while count < 100 and change > 1e-9:
+    while change > 1e-4:
         probes = np.linspace(guess - guess * change, guess + guess * change, no_probes)
         results = np.mod(np.broadcast_to(data, (max_dim, no_probes)), probes)
 
@@ -68,12 +70,22 @@ def period_stupid_search(data, deltas):
             bestval = distances[seed]
 
         if seed < no_probes // 2:
-            guess = guess - change / 2
+            guess = guess - guess * change / 2
         elif seed > no_probes // 2:
-            guess = guess + change / 2
-        change = change * 0.84
+            guess = guess + guess * change / 2
+        change = change * 0.8
         count = count + 1
     best = best * round(initial_guess / best, 0)
+
+    probes = np.linspace(best - 0.0002, best + 0.0002, no_probes)
+    results = np.mod(np.broadcast_to(data, (max_dim, no_probes)), probes)
+
+    distances = distance_metric(results, probes)
+
+    seed = np.argmin(distances)
+    if distances[seed] < bestval:
+        best = probes[seed]
+
     return best
 
 
@@ -81,7 +93,7 @@ def align_data(data, new_offset):
     return data - data[0] + new_offset
 
 
-def getOC(eclipses, author="Vikram"):
+def getOC(eclipses, author="Vikram", return_diagnostics=False):
     """Using estimated period and offset, get the O-C values
 
     Args:
@@ -91,6 +103,8 @@ def getOC(eclipses, author="Vikram"):
     Returns:
         O-C: An array of floats, representing the O-C values
     """
+
+    filtered, diagnostics = complete_filter(eclipses, "delta", return_diagnositics=True)
     
     if author == "Vikram":
         period = period_stupid_search(eclipses['time'], eclipses['delta'])
@@ -100,6 +114,13 @@ def getOC(eclipses, author="Vikram"):
     else:
         raise ValueError("Author must be vikram or yuan xi")
 
+    period = period * round(filtered["delta"].median() / period, 0)
+    filtered["residuals"] = align_data(filtered["time"], period / 2) % period - period / 2
+    filtered = cull_oscillations(filtered, "residuals")
+
     # return  align_data(eclipses['time'], period / 2) % period, period
 
-    return period
+    if return_diagnostics:
+        return filtered, period, diagnostics
+
+    return filtered, period
