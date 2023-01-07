@@ -1,2 +1,3 @@
-# ThreeBody2
-2nd Edition of Three Body
+# An Automated Screening System for Trinary Star System Candidates
+
+
