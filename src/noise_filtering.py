@@ -98,7 +98,7 @@ def complete_filter(eclipses, col, return_diagnositics=True)\
     eclipses: pd.DataFrame
 
     if return_diagnositics:
-        if wquantiles.quantile(eclipses[col], eclipses[col], 0.75) > 1 and stats.mstats.trimmed_std(eclipses["delta"]) > 0.7:
+        if wquantiles.quantile(eclipses[col], eclipses[col], 0.75) > 1 and stats.mstats.trimmed_std(eclipses[col]) > 0.7:
             eclipses, diagnostics[0] = remove_low_noise(eclipses, col, return_dropped=True)
         elif wquantiles.quantile(eclipses[col], eclipses[col], 0.75) > 1:
             eclipses, diagnostics[0] = remove_high_noise(eclipses, col, return_dropped=True)
@@ -108,8 +108,6 @@ def complete_filter(eclipses, col, return_diagnositics=True)\
             eclipses = backup
             diagnostics[1] = -1
         eclipses, diagnostics[2] = remove_doubles(eclipses, col, return_handling_happened=True)
-        #eclipses, diagnostics[3] = remove_low_density(eclipses, col, return_dropped=True)
-        # TODO the int and bool at the end are for the KDE detection one, unfinished
 
         diagnostics: Tuple[int, int, bool, int] = tuple(diagnostics)  # Exclusively for typing reasons
 
@@ -119,13 +117,15 @@ def complete_filter(eclipses, col, return_diagnositics=True)\
 
     # Yes I know this else is unnecessary, but it's neater
     else:
-        if wquantiles.quantile(eclipses[col], eclipses[col], 0.75) > 1 and stats.mstats.trimmed_std(eclipses["delta"]) > 0.7:
+        if wquantiles.quantile(eclipses[col], eclipses[col], 0.75) > 1 and stats.mstats.trimmed_std(eclipses[col]) > 0.7:
             eclipses = remove_low_noise(eclipses, col, return_dropped=False)
         elif wquantiles.quantile(eclipses[col], eclipses[col], 0.75) > 1:
             eclipses = remove_high_noise(eclipses, col, return_dropped=False)
+        backup = eclipses.copy()
         eclipses = remove_outliers(eclipses, col, return_dropped=False)
+        if eclipses.empty:
+            eclipses = backup
         eclipses = remove_doubles(eclipses, col, return_handling_happened=False)
-        eclipses = remove_low_density(eclipses, col, return_dropped=False)
 
         eclipses = eclipses.reset_index(drop=True)
 

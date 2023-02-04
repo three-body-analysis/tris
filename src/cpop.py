@@ -107,9 +107,9 @@ def getOC(eclipses, author="Vikram", return_diagnostics=False):
     filtered, diagnostics = complete_filter(eclipses, "delta", return_diagnositics=True)
     
     if author == "Vikram":
-        period = period_stupid_search(eclipses['time'], eclipses['delta'])
+        period = period_stupid_search(filtered['time'], filtered['delta'])
     elif author == "Yuan Xi":
-        period, offset = estimateConstantPeriod(eclipses['time'])
+        period, offset = estimateConstantPeriod(filtered['time'])
 
     else:
         raise ValueError("Author must be vikram or yuan xi")
