@@ -17,7 +17,7 @@ def remove_low_noise(eclipses, col, return_dropped=False):
 
     mask: np.ndarray[bool] = eclipses[col] > percentile_75 * threshold
     if np.mean(eclipses[col]) > 0.3:
-        mask = mask & (eclipses[col] > 0.1) # drop the garbage
+        mask = mask & (eclipses[col] > 0.1)  # drop the garbage
 
     if return_dropped:
         return eclipses[mask], (~mask).sum()

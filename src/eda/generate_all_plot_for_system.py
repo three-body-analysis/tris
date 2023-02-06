@@ -18,9 +18,12 @@ import statsmodels.api as sm
 
 from utils.set_dir_to_root import set_dir_to_root
 
-def basic_plot(x, y, xlabel, ylabel, title, path):
+
+def basic_plot(x, y, xlabel, ylabel, title, path, scatter=True):
     fig, ax = plt.subplots(figsize=(12.8, 7.2))
-    ax.plot(x, y)
+
+    if scatter: ax.scatter(x, y)
+    else: ax.plot(x, y)
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     ax.set_title(title)
@@ -67,7 +70,6 @@ if __name__ == "__main__":
     curr["residuals"] = align_data(curr["time"], period / 2) % period - period / 2
     eclipses.append(curr)
 
-
     y = curr["residuals"].values - curr["residuals"].mean()
 
     N = len(y)
@@ -87,6 +89,20 @@ if __name__ == "__main__":
 
     eclipses.append(curr.reset_index(drop=True))
 
+    SMALL_SIZE = 15
+    MEDIUM_SIZE = 20
+    BIGGER_SIZE = 25
+    TITLE_PADDING = 23
+
+    plt.rc('font', size=SMALL_SIZE)
+    plt.rc('axes', titlesize=SMALL_SIZE)
+    plt.rc('axes', labelsize=MEDIUM_SIZE)
+    plt.rc('axes', titlepad=TITLE_PADDING)
+    plt.rc('xtick', labelsize=SMALL_SIZE)
+    plt.rc('ytick', labelsize=SMALL_SIZE)
+    plt.rc('legend', fontsize=SMALL_SIZE)
+    plt.rc('figure', titlesize=BIGGER_SIZE)
+
     indexes = ["delta", "delta", "delta", "delta", "residuals", "culled_residuals"]
     time_scale_factor = [1, 1, 1, 1, 1440, 1440]
     ylabels = ["Eclipse Timings / day", "Eclipse Timings / day", "Eclipse Timings / day", "Eclipse Timings / day",
@@ -101,10 +117,10 @@ if __name__ == "__main__":
                    "Time / days", ylabels[i], titles[i], f"generated/set_for_system/plot_{i}")
 
     basic_plot(xf * 1000, 2.0 / N * np.abs(f_signal[:N // 2]), "Frequency / mHz", "Relative amplitude",
-               "Frequency spectrum of Eclipse Timings", "generated/set_for_system/unculled_fft")
+               "Frequency spectrum of Eclipse Timings", "generated/set_for_system/unculled_fft", scatter=False)
 
     basic_plot(xf * 1000, 2.0 / N * np.abs(culled_f_signal[:N // 2]), "Frequency / mHz", "Relative amplitude",
-               "Culled frequency spectrum of Eclipse Timings", "generated/set_for_system/culled_fft")
+               "Culled frequency spectrum of Eclipse Timings", "generated/set_for_system/culled_fft", scatter=False)
 
     table = Table.read("data/combined/" + all_systems[file], format="fits")
 
@@ -112,6 +128,8 @@ if __name__ == "__main__":
     sap_fluxes = table["SAP_FLUX"]
 
     flattened_lc = wotan.flatten(times, sap_fluxes, window_length=0.5, method='biweight')
+
+    times = times - times.min()
     median = np.nanmedian(flattened_lc)
     std = np.nanstd(flattened_lc)
     threshold = get_threshold(median, std)
