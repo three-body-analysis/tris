@@ -21,8 +21,8 @@ if __name__ == "__main__":
     #with open("data/cpop_diagnostics.txt", "w") as out:
     #    out.write("noise,outliers,doubles,density\n")
 
-    start = 881
-    end = 881
+    start = 289
+    end = 289
 
     # TODO if something breaks, remove this bit and see what it is
     warnings.filterwarnings('ignore', category=AstropyWarning, append=True)

@@ -55,14 +55,15 @@ def remove_doubles(eclipses, col, offset_attempts=21, return_handling_happened=F
             break
 
     if combine[0]:
-        primary = eclipses[col].min() + binwidth * (combine[1] + 0.5)  # Middle of the primary eclipse bin
-        secondary = eclipses[col].min() + binwidth * (combine[2] + 0.5)
+        col_copy = eclipses[col].copy()
+        primary = col_copy.min() + binwidth * (combine[1] + 0.5)  # Middle of the primary eclipse bin
+        secondary = col_copy.min() + binwidth * (combine[2] + 0.5)
 
-        eclipses["shifted"] = eclipses[col].shift(periods=-1)
-        eclipses["to_sum"] = close_to(eclipses[col], primary,
+        eclipses["shifted"] = col_copy.shift(periods=-1)
+        eclipses["to_sum"] = close_to(col_copy, primary,
                                       binwidth * 1.5) & close_to(eclipses["shifted"], secondary, binwidth * 1.5)
         eclipses["to_drop"] = close_to(eclipses["shifted"], primary,
-                                       binwidth * 1.5) & close_to(eclipses[col], secondary, binwidth * 1.5)
+                                       binwidth * 1.5) & close_to(col_copy, secondary, binwidth * 1.5)
         # binwidth * 1.5 rather than binwidth / 2 here because of error and stuff, it's weird
 
         eclipses.loc[eclipses["to_sum"], col] = eclipses[eclipses["to_sum"]][col] + \
