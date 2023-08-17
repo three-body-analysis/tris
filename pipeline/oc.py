@@ -3,41 +3,14 @@ from typing import Tuple
 
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
 
 from pipeline.util import align_data
 
 __all__ = [
-    "estimate_constant_period",
     "distance_metric",
     "period_search",
     "get_oc"
 ]
-
-
-def estimate_constant_period(timings):
-    """Estimates the period and offset from eclipse timings
-
-    Args:
-        timings (1D Array of floats): A list of eclipse TOMS
-
-    Returns:
-        period: The estimated period (P_est)
-        offset: The estimated offset (T_0)
-    """
-
-    X = np.arange(len(timings)).reshape((-1, 1))
-    y = timings
-
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
-
-    regressor = LinearRegression()
-    regressor.fit(X_train, y_train)
-    mse = mean_squared_error(y_test, regressor.predict(X_test))
-
-    return regressor.coef_[0], regressor.intercept_
 
 
 def distance_metric(dist, spans):

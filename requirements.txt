@@ -4,6 +4,5 @@ scipy
 matplotlib
 wquantiles
 wotan
-scikit-learn
 statsmodels
 astropy
