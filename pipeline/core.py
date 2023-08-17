@@ -13,7 +13,7 @@ def ideal_pipeline(filepath: str):
     df = detrend(read(filepath))
     df = detrend(df)
     timings = find_eclipse_timings(df)
-    timings, diagnostics = complete_filter(timings, return_diagnostics=True)
-    timings, period = get_oc(timings)
-    timings = remove_periodic_noise(timings)
-    return timings, period, diagnostics
+    timings = complete_filter(timings)
+    oc, period = get_oc(timings)
+    oc = remove_periodic_noise(oc)
+    return oc, period

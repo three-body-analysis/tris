@@ -24,5 +24,5 @@ def remove_periodic_noise(df: pd.DataFrame) -> pd.DataFrame:
     f_signal[(W < 0)] = 0
 
     culled_residuals = irfft(f_signal)
-    df["culled_residuals"] = culled_residuals
+    df.residuals = culled_residuals
     return df

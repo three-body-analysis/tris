@@ -53,7 +53,7 @@ def period_search(time: pd.Series, delta: pd.Series) -> float:
     # Median Difference between Eclipses
     initial_guess = delta.median()
     guess = initial_guess
-    data = align_data(time, guess / 2)
+    time = align_data(time, guess / 2)
 
     change = 0.1
     no_probes = 101
@@ -62,12 +62,12 @@ def period_search(time: pd.Series, delta: pd.Series) -> float:
     time = np.expand_dims(time, 1)
 
     best = guess
-    bestval = distance_metric(data % guess, guess)
+    bestval = distance_metric(time % guess, guess)
     count = 0
 
     while change > 1e4:
         probes = np.linspace(guess - guess * change, guess + guess * change, no_probes)
-        results = np.mod(np.broadcast_to(data, (max_dim, no_probes)), probes)
+        results = np.mod(np.broadcast_to(time, (max_dim, no_probes)), probes)
 
         distances = distance_metric(results, probes)
 
@@ -87,7 +87,7 @@ def period_search(time: pd.Series, delta: pd.Series) -> float:
     best = best * round(initial_guess / best, 0)
 
     probes = np.linspace(best - 0.0002, best + 0.0002, no_probes)
-    results = np.mod(np.broadcast_to(data, (max_dim, no_probes)), probes)
+    results = np.mod(np.broadcast_to(time, (max_dim, no_probes)), probes)
 
     distances = distance_metric(results, probes)
 
