@@ -35,7 +35,7 @@ def remove_high_noise(eclipses, col, return_dropped=False):
     mask: np.ndarray[bool] = eclipses[col] < median * threshold
 
     if return_dropped:
-        return eclipses[mask], -(~mask).sum()
+        return eclipses[mask], (~mask).sum()
 
     print((~mask).sum(), "eclipses dropped by high noise filter")
     return eclipses[mask]

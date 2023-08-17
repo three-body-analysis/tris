@@ -31,14 +31,13 @@ def period_search(time: pd.Series, delta: pd.Series) -> float:
     change = 0.1
     no_probes = 101
     max_dim = len(time)
-
     time = np.expand_dims(time, 1)
 
     best = guess
     bestval = distance_metric(time % guess, guess)
-    count = 0
 
-    while change > 1e4:
+    count = 0
+    while change > 1e-4:
         probes = np.linspace(guess - guess * change, guess + guess * change, no_probes)
         results = np.mod(np.broadcast_to(time, (max_dim, no_probes)), probes)
 
