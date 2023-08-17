@@ -88,7 +88,7 @@ def double_filter_mask(delta, offset_attempts: int = 21) -> Tuple[np.ndarray, np
     scores = np.sum(np.square(results), axis=1)
 
     # get the middle offset that maximises score
-    inverted = np.where(scores == np.max(scores))
+    inverted = np.where(scores == np.max(scores))[0]
     offset = offsets[inverted[inverted.shape[0] // 2]]
 
     counts, edges = np.histogram(
@@ -110,7 +110,7 @@ def double_filter_mask(delta, offset_attempts: int = 21) -> Tuple[np.ndarray, np
             # third = first + second
 
             primary = delta.min() + binwidth * (first + 0.5)
-            secondary = delta.min() + binwidth & (second + 0.5)
+            secondary = delta.min() + binwidth * (second + 0.5)
 
             shifted = delta.shift(periods=-1)
             to_sum = close_to(delta, primary, binwidth * 1.5) & close_to(delta, secondary, binwidth * 1.5)

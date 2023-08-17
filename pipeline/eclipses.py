@@ -35,14 +35,16 @@ def compute_crossings(df: pd.DataFrame, threshold: float) -> pd.DataFrame:
 
     crossings = df[descending | ascending]
 
-    if crossings.iloc[0].time == df[ascending].iloc[0].time:
-        # An eclipse has to start with a descending node, so if the crossings
-        # start with an ascending node, the ascending node needs to be culled.
-        crossings = crossings.iloc[1:]
+    if ascending.sum():
+        if crossings.iloc[0].time == df[ascending].iloc[0].time:
+            # An eclipse has to start with a descending node, so if the crossings
+            # start with an ascending node, the ascending node needs to be culled.
+            crossings = crossings.iloc[1:]
 
-    if crossings.iloc[-1].time == df[descending].iloc[-1].time:
-        # Cull any eclipses that aren't completed
-        crossings = crossings.iloc[:-1]
+    if descending.sum():
+        if crossings.iloc[-1].time == df[descending].iloc[-1].time:
+            # Cull any eclipses that aren't completed
+            crossings = crossings.iloc[:-1]
 
     return crossings
 
