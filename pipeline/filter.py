@@ -10,7 +10,7 @@ from pipeline.util import expand_mask, close_to
 
 __all__ = [
     "denoise_mask", "outlier_filter_mask",
-    "low_density_filter_mask", "double_filter_mask",
+    "double_filter_mask",
     "complete_filter"
 ]
 
@@ -51,20 +51,6 @@ def outlier_filter_mask(delta: pd.Series, sigma: float = 5) -> np.ndarray:
 
     if mask.sum() == 0:
         mask = mask | (~mask)
-
-    return mask
-
-
-def low_density_filter_mask(eclipses: pd.DataFrame, adjust: float = 0.3) -> np.ndarray:
-    dens = sm.nonparametric.KDEUnivariate(eclipses.delta)
-    dens.fit(adjust=adjust)  # 0.2 to 0.3
-
-    x = np.linspace(0, eclipses.delta.max(), 1000)
-    y = dens.evaluate(x) * x
-    mask = np.argwhere(expand_mask(y >= (np.max(y) * 0.25), 3))
-
-    eclipses["normed_deltas"] = (eclipses.delta / eclipses.delta.max() * 1000).round() - 1
-    mask = np.isin(eclipses.normed_deltas, mask)
 
     return mask
 
