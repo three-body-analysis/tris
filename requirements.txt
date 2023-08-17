@@ -4,5 +4,4 @@ scipy
 matplotlib
 wquantiles
 wotan
-statsmodels
 astropy

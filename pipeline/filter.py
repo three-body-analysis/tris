@@ -3,10 +3,9 @@ import pandas as pd
 import wquantiles
 from scipy import stats
 import numpy as np
-import statsmodels.api as sm
 from typing import Tuple, Union
 
-from pipeline.util import expand_mask, close_to
+from pipeline.util import close_to
 
 __all__ = [
     "denoise_mask", "outlier_filter_mask",
