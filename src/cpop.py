@@ -1,12 +1,9 @@
 import numpy as np
-from numpy.fft import *
-from scipy.stats import stats
-from sklearn.model_selection import train_test_split 
-from sklearn.linear_model import LinearRegression
 from sklearn import metrics
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
 
 from src.cull_oscillations import cull_oscillations
-from src.handle_double_eclipses import close_to
 from src.noise_filtering import complete_filter
 
 
@@ -22,7 +19,8 @@ def estimateConstantPeriod(timings):
     """
 
     # Its just a simple linear regression on the timings
-    x_train, x_test, y_train, y_test = train_test_split(np.arange(len(timings)).reshape((-1, 1)), timings, test_size=0.2, random_state=0)
+    x_train, x_test, y_train, y_test = train_test_split(np.arange(len(timings)).reshape((-1, 1)), timings,
+                                                        test_size=0.2, random_state=0)
 
     regressor = LinearRegression()
     regressor.fit(x_train, y_train)  # training the algorithm
@@ -105,7 +103,7 @@ def getOC(eclipses, author="Vikram", return_diagnostics=False):
     """
 
     filtered, diagnostics = complete_filter(eclipses, "delta", return_diagnositics=True)
-    
+
     if author == "Vikram":
         period = period_stupid_search(filtered['time'], filtered['delta'])
     elif author == "Yuan Xi":

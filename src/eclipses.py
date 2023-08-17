@@ -1,7 +1,7 @@
-from astropy.table import Table
 import matplotlib.pyplot as plt
-import wotan
 import pandas as pd
+import wotan
+from astropy.table import Table
 
 
 def get_threshold(median, std):
@@ -41,9 +41,9 @@ def get_eclipses(filename, data_path):
         # TODO Figure out a better way to revise the threshold
         threshold = df["flux"].median() - df["flux"].std() * 1.3
         df["descending"] = (df["flux"] < threshold) & (
-            df["previous"] > threshold)
+                df["previous"] > threshold)
         df["ascending"] = (df["flux"] > threshold) & (
-            df["previous"] < threshold)
+                df["previous"] < threshold)
 
         crossings = df[df["descending"] | df["ascending"]]
 

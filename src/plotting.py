@@ -1,8 +1,7 @@
-from astropy.table import Table
 import matplotlib.pyplot as plt
-import wotan
 import numpy as np
-from glob import glob
+import wotan
+from astropy.table import Table
 
 from src.eclipses import get_threshold
 from utils.set_dir_to_root import set_dir_to_root

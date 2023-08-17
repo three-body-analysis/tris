@@ -1,16 +1,10 @@
-import matplotlib.pyplot as plt
 import warnings
 
-import numpy as np
 from astropy.utils.exceptions import AstropyWarning
 from scipy import stats
 
-from src.cpop import getOC, align_data
+from src.cpop import getOC
 from src.eclipses import get_eclipses
-from src.noise_filtering import complete_filter
-
-import statsmodels.api as sm
-
 from utils.set_dir_to_root import set_dir_to_root
 
 if __name__ == "__main__":
@@ -28,7 +22,7 @@ if __name__ == "__main__":
     # TODO if something breaks, remove this bit and see what it is
     warnings.filterwarnings('ignore', category=AstropyWarning, append=True)
 
-    for i in range(start, end+1):
+    for i in range(start, end + 1):
         if i % 10 == 0:
             print("\nProcessing Number " + str(i))
         eclipses = get_eclipses(all_systems[i], "data/combined")

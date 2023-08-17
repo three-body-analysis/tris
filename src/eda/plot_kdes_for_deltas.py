@@ -1,14 +1,12 @@
-import matplotlib.pyplot as plt
 import warnings
 
+import matplotlib.pyplot as plt
 import numpy as np
+import statsmodels.api as sm
 from astropy.utils.exceptions import AstropyWarning
 
 from src.eclipses import get_eclipses
 from src.noise_filtering import complete_filter
-
-import statsmodels.api as sm
-
 from utils.set_dir_to_root import set_dir_to_root
 
 if __name__ == "__main__":

@@ -1,29 +1,28 @@
-import matplotlib.pyplot as plt
 import warnings
 
+import matplotlib.pyplot as plt
 import numpy as np
 import wotan
 import wquantiles
 from astropy.table import Table
 from astropy.utils.exceptions import AstropyWarning
 from scipy import stats
+from scipy.fftpack import rfft, irfft, fftfreq
 
 from src.cpop import align_data, period_stupid_search
 from src.eclipses import get_eclipses, get_threshold
 from src.handle_double_eclipses import remove_doubles
 from src.noise_filtering import remove_low_noise, remove_high_noise, remove_outliers
-from scipy.fftpack import rfft, irfft, fftfreq
-
-import statsmodels.api as sm
-
 from utils.set_dir_to_root import set_dir_to_root
 
 
 def basic_plot(x, y, xlabel, ylabel, title, path, scatter=True):
     fig, ax = plt.subplots(figsize=(12.8, 7.2))
 
-    if scatter: ax.scatter(x, y)
-    else: ax.plot(x, y)
+    if scatter:
+        ax.scatter(x, y)
+    else:
+        ax.plot(x, y)
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     ax.set_title(title)
@@ -36,7 +35,7 @@ if __name__ == "__main__":
     with open("data/all_systems.txt") as f:
         all_systems = f.read().split(",")
 
-    #with open("data/cpop_diagnostics.txt", "w") as out:
+    # with open("data/cpop_diagnostics.txt", "w") as out:
     #    out.write("noise,outliers,doubles,density\n")
 
     file = 181
@@ -48,7 +47,8 @@ if __name__ == "__main__":
     curr = get_eclipses(all_systems[file], "data/combined")
     eclipses.append(curr.reset_index(drop=True))
 
-    if wquantiles.quantile(eclipses[0]["delta"], eclipses[0]["delta"], 0.75) > 1 and stats.mstats.trimmed_std(eclipses[0]["delta"]) > 0.7:
+    if wquantiles.quantile(eclipses[0]["delta"], eclipses[0]["delta"], 0.75) > 1 and stats.mstats.trimmed_std(
+            eclipses[0]["delta"]) > 0.7:
         curr = remove_low_noise(eclipses[0], "delta", return_dropped=False)
     elif wquantiles.quantile(eclipses[0]["delta"], eclipses[0]["delta"], 0.75) > 1:
         curr = remove_high_noise(eclipses[0], "delta", return_dropped=False)
@@ -134,7 +134,6 @@ if __name__ == "__main__":
     std = np.nanstd(flattened_lc)
     threshold = get_threshold(median, std)
 
-
     fig, ax = plt.subplots(figsize=(12.8, 7.2))
 
     ax.plot(times, sap_fluxes, '-k', label='Detrended Flux')
@@ -142,7 +141,6 @@ if __name__ == "__main__":
     ax.set_xlabel('Time (days)')
     ax.set_ylabel('Flux (electrons/second)')
     fig.savefig("generated/set_for_system/raw_light_curve", dpi=fig.dpi, bbox_inches="tight")
-
 
     fig, ax = plt.subplots(figsize=(12.8, 7.2))
 

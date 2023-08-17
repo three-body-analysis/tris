@@ -1,12 +1,11 @@
-from astropy.table import Table
-import matplotlib.pyplot as plt
-import wotan
-import numpy as np
+import pathlib
 import time as t
 from glob import glob
-import pandas as pd
-import pathlib
 
+import numpy as np
+import pandas as pd
+import wotan
+from astropy.table import Table
 
 
 def generate_statistics(filename):
@@ -16,7 +15,7 @@ def generate_statistics(filename):
 
     time = table["TIME"]
     flattened_lc = wotan.flatten(
-        time, table["SAP_FLUX"], 
+        time, table["SAP_FLUX"],
         window_length=0.5, method='biweight'
     )
 
@@ -24,10 +23,10 @@ def generate_statistics(filename):
         print("Processing number", str(i), "at", t.time() - now, "seconds...")
 
     return pd.Series(dict(
-        mean = np.nanmean(flattened_lc),
-        std = np.nanstd(flattened_lc),
-        min_time = np.nanmin(time),
-        max_time = np.nanmax(time)
+        mean=np.nanmean(flattened_lc),
+        std=np.nanstd(flattened_lc),
+        min_time=np.nanmin(time),
+        max_time=np.nanmax(time)
     ))
 
 

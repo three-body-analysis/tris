@@ -31,7 +31,7 @@ def remove_doubles(eclipses, col, offset_attempts=21, return_handling_happened=F
 
     one_hot = (scores == np.max(scores)).astype(int).T  # which offsets maximised score?
     inverted = np.argwhere(one_hot)[:, 1]  # inverting the above
-    offset = offsets[inverted[len(inverted)//2]]  # among all the offsets that maximised score, get the middle one
+    offset = offsets[inverted[len(inverted) // 2]]  # among all the offsets that maximised score, get the middle one
 
     counts, edges = np.histogram(eclipses[col], bins=no_bins + 1,
                                  range=(eclipses[col].min() - offset, eclipses[col].max() - offset + binwidth))
@@ -46,8 +46,8 @@ def remove_doubles(eclipses, col, offset_attempts=21, return_handling_happened=F
         second = idxs[j]
 
         # Note that counts[first] is always bigger than counts[second]
-        if abs(first - second) > 1 and (counts[first] < counts[second] * 2.5)\
-                and not (close_to(first*2, second, binwidth*2) or close_to(first, second*2, binwidth*2)):
+        if abs(first - second) > 1 and (counts[first] < counts[second] * 2.5) \
+                and not (close_to(first * 2, second, binwidth * 2) or close_to(first, second * 2, binwidth * 2)):
             # If they are not adjacent, and are reasonably close together
             # But they aren't close to being doubles of one another
             third = first + second

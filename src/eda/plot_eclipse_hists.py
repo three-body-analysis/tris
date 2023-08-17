@@ -1,8 +1,8 @@
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
 
-def plot_eclipse_hists(eclipses, dims=(19.2, 10.8), offset_attempts=21, col="delta",):
+def plot_eclipse_hists(eclipses, dims=(19.2, 10.8), offset_attempts=21, col="delta", ):
     fig, ax = plt.subplots(figsize=dims)
 
     binwidth = 0.12

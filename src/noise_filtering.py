@@ -1,10 +1,11 @@
+from typing import List, Union, Tuple
+
 import numpy as np
 import pandas as pd
+import statsmodels.api as sm
+import wquantiles
 from matplotlib import pyplot as plt
 from scipy import stats
-from typing import List, Union, Tuple
-import wquantiles
-import statsmodels.api as sm
 
 from src.handle_double_eclipses import remove_doubles
 from utils.expand_mask import expand_mask
@@ -90,7 +91,7 @@ def get_filtered_and_unfiltered(eclipses):
     return fig1, ax1, fig2, ax2, diagnostics
 
 
-def complete_filter(eclipses, col, return_diagnositics=True)\
+def complete_filter(eclipses, col, return_diagnositics=True) \
         -> Union[pd.DataFrame, Tuple[pd.DataFrame, Tuple[int, int, bool, int]]]:
     # Yes, this stuff is confusing enough that I'm adding type hints
     diagnostics: List = [0, 0, False, 0]
@@ -98,7 +99,8 @@ def complete_filter(eclipses, col, return_diagnositics=True)\
     eclipses: pd.DataFrame
 
     if return_diagnositics:
-        if wquantiles.quantile(eclipses[col], eclipses[col], 0.75) > 1 and stats.mstats.trimmed_std(eclipses[col]) > 0.7:
+        if wquantiles.quantile(eclipses[col], eclipses[col], 0.75) > 1 and stats.mstats.trimmed_std(
+                eclipses[col]) > 0.7:
             eclipses, diagnostics[0] = remove_low_noise(eclipses, col, return_dropped=True)
         elif wquantiles.quantile(eclipses[col], eclipses[col], 0.75) > 1:
             eclipses, diagnostics[0] = remove_high_noise(eclipses, col, return_dropped=True)
@@ -117,7 +119,8 @@ def complete_filter(eclipses, col, return_diagnositics=True)\
 
     # Yes I know this else is unnecessary, but it's neater
     else:
-        if wquantiles.quantile(eclipses[col], eclipses[col], 0.75) > 1 and stats.mstats.trimmed_std(eclipses[col]) > 0.7:
+        if wquantiles.quantile(eclipses[col], eclipses[col], 0.75) > 1 and stats.mstats.trimmed_std(
+                eclipses[col]) > 0.7:
             eclipses = remove_low_noise(eclipses, col, return_dropped=False)
         elif wquantiles.quantile(eclipses[col], eclipses[col], 0.75) > 1:
             eclipses = remove_high_noise(eclipses, col, return_dropped=False)

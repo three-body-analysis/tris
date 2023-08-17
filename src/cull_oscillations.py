@@ -1,15 +1,11 @@
-import math
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.fftpack import rfft, irfft, fftfreq, fft
+from scipy.fftpack import rfft, irfft, fftfreq
 
 
 def cull_oscillations(eclipses, col):
-
     y = eclipses[col].values - eclipses[col].mean()
 
-    #oversampled_amount = int(math.pow(2, math.ceil(math.log(len(y),2))) - len(y))
-    #if oversampled_amount / len(y) < 0.2:
+    # oversampled_amount = int(math.pow(2, math.ceil(math.log(len(y),2))) - len(y))
+    # if oversampled_amount / len(y) < 0.2:
     #    y = np.pad(y, (0, oversampled_amount), mode='constant')
 
     N = len(y)

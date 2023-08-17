@@ -1,5 +1,6 @@
-import matplotlib.pyplot as plt
 import warnings
+
+import matplotlib.pyplot as plt
 from astropy.utils.exceptions import AstropyWarning
 
 from pipelining.plot_lightcurve import plot_curves

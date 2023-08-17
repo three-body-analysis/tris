@@ -1,18 +1,12 @@
 import numpy as np
-from matplotlib import pyplot as plt
-from scipy import stats
 import seaborn as sns
-from typing import List, Union, Tuple
+import statsmodels.api as sm
+from matplotlib import pyplot as plt
 
 from src.eclipses import get_eclipses, plot_eclipse_timings
 from src.eda.plot_eclipse_hists import plot_eclipse_hists
-from src.handle_double_eclipses import remove_doubles
-from src.plotting import plot_curves
-from utils.set_dir_to_root import set_dir_to_root
 from src.noise_filtering import complete_filter
-
-import statsmodels.api as sm
-
+from utils.set_dir_to_root import set_dir_to_root
 
 set_dir_to_root()
 sns.set_style("whitegrid")
@@ -24,7 +18,6 @@ system_id = all_systems[13]  # 44
 eclipses = get_eclipses(system_id, "data/combined")
 
 plot_eclipse_hists(eclipses)
-
 
 filtered, diagnostics = complete_filter(eclipses, "delta", return_diagnositics=True)
 
@@ -49,4 +42,3 @@ ax.plot(x, y)
 # ax.plot(plt.axis()[:2], [threshold, threshold], "-b", linewidth=3)
 
 fig.show()
-
