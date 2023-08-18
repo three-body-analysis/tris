@@ -4,11 +4,12 @@ channels:
 dependencies:
   - python=3.9
   - numpy<=1.24
-  - pandas
-  - scipy
-  - matplotlib
-  - astropy
-  - tqdm
+  - pandas>=1.1.4
+  - scipy>=1.7
+  - matplotlib>=3.1
+  - astropy>=5.0
+  - tqdm>=4.25
   - pip
   - pip:
+      - requests>=2.22.0
       - wotan==1.10

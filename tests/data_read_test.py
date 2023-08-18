@@ -2,7 +2,7 @@ import unittest
 from tqdm import tqdm
 from glob import glob
 
-from pipeline.preproc import read
+from tris.preproc import read
 
 import warnings
 

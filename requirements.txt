@@ -1,7 +1,9 @@
 numpy<=1.24.0
-pandas
-scipy
-matplotlib
+pandas>=1.1.4
+scipy>=1.7
+matplotlib>=3.1
 wquantiles
-wotan
-astropy
+astropy>=5.0
+wotan==1.10
+requests>=2.22.0
+tqdm>=4.25.0
