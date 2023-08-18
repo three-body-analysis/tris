@@ -56,6 +56,5 @@ testpaths = [
     "tests"
 ]
 filterwarnings = [
-    "error::ResourceWarning",
-    "error::UnitWarning"
+    "error::ResourceWarning"
 ]
