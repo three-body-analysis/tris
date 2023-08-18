@@ -11,5 +11,6 @@
 - `src/noise_filtering.py` $\rightarrow$ `pipeline/filter.py`
 - `src/plot_cpops.py` (not in pipeline, test script)
 - `src/plotting.py`(not in pipeline, test script)
+- `src/eda` $\rightarrow$ Placed in `logbooks/`
 
 

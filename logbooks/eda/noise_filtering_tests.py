@@ -4,7 +4,7 @@ import statsmodels.api as sm
 from matplotlib import pyplot as plt
 
 from src.eclipses import get_eclipses, plot_eclipse_timings
-from src.eda.plot_eclipse_hists import plot_eclipse_hists
+from logbooks.eda.plot_eclipse_hists import plot_eclipse_hists
 from src.noise_filtering import complete_filter
 from utils.set_dir_to_root import set_dir_to_root
 
