@@ -3,7 +3,7 @@
 
 ## Basic Guide to Codebase
 
-- `data` - Contains the acquired `.fits` files that contain the light curves for all objects classified as EBs.
+[//]: # (- `data` - Contains the acquired `.fits` files that contain the light curves for all objects classified as EBs.)
 - `datagen` - Contains the data generation and acquisition scheme to get the files in `data`.
 - `logbooks` - Personal Logbooks of us determining our ideal algorithm. It uses an older version of the codebase.
 - `notebooks` - Notebooks to test our code and visualise them, and also to give examples of usage
@@ -11,3 +11,7 @@
 - `pipelining` - Older versions of `datagen`.
 - `src` and `utils` - Older versions of `pipeline`.
 - `manual_classification.xlsx` - Post Algorithm Manual Classification done by us.
+
+Do note that in our codebase, you will see references to a `data/` folder. This folder contains the acquired `.fits` 
+files that contain the light curves for all objects classified as EBs. You can install this by running 
+`datagen/load.sh`.
