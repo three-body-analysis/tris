@@ -14,7 +14,7 @@ __all__ = [
 ]
 
 
-def denoise_mask(delta: Union[pd.Series, np.ndarray]) -> np.ndarray[bool]:
+def denoise_mask(delta: Union[pd.Series, np.ndarray]) -> np.ndarray:
     percentile_75 = wquantiles.quantile(delta, delta, 0.75)
     std = stats.mstats.trimmed_std(delta)
 
@@ -46,7 +46,7 @@ def outlier_filter_mask(delta: pd.Series, sigma: float = 5) -> np.ndarray:
     thresh_lower = median - sigma * std
     thresh_upper = median + sigma * std
 
-    mask: np.ndarray[bool] = (delta > thresh_lower) & (delta < thresh_upper)
+    mask: np.ndarray = (delta > thresh_lower) & (delta < thresh_upper)
 
     if mask.sum() == 0:
         mask = mask | (~mask)
