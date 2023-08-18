@@ -1,41 +1,124 @@
 # This workflow will install Python dependencies, run tests and lint with a variety of Python versions
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
-name: Python package
+# This file configures seven different jobs:
+# 1) pytest on Linux, Python 3.8, with -m memtest (i.e. stress memory)
+# 2) pytest on Linux, Python 3.8, with --remote-data enabled (i.e. get data from MAST).
+# 3) pytest on Linux, Python 3.9.
+# 4) pytest on Linux, Python 3.10.
+# 5) pytest on Windows, Python 3.8.
+# 6) pytest on OSX, Python 3.8.
+# 7) flake8 syntax check.
+
+name: python-package
 
 on:
+  # We always want to run tests on main
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+  # And we'll also run tests on pull requests
   pull_request:
-    branches: [ "main" ]
 
 jobs:
-  build:
 
+  # Run unit tests on Linux
+  pytest-linux:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
-
+        name: [3.8-remote-data, 3.8-memtest, 3.9, '3.10']
+        include:
+          - name: 3.8-remote-data
+            python-version: 3.8
+            pytest-command: poetry run pytest --remote-data --doctest-modules
+          - name: 3.8-memtest
+            python-version: 3.8
+            pytest-command: poetry run pytest -m memtest --remote-data
+          - name: 3.9
+            python-version: 3.9
+            pytest-command: poetry run pytest
+          - name: '3.10'
+            python-version: '3.10'
+            pytest-command: poetry run pytest
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        python -m pip install poetry
-        python -m pip install flake8 pytest
+        python -m pip install --upgrade pip 'poetry>=1.4.0'
+        poetry config installer.modern-installation false
+        poetry install
+    - name: Test with ${{ matrix.pytest-command }}
+      run: |
+        ${{ matrix.pytest-command }}
+
+  # Run unit tests on Windows
+  pytest-windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        name: [3.8]
+        python-version: [3.8]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip 'poetry>=1.4.0'
+        poetry config installer.modern-installation false
+        poetry install
+    - name: Test with pytest
+      run: |
+        poetry run pytest
+
+  # Run unit tests on Mac OSX
+  pytest-osx:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        python-version: [3.8]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip 'poetry>=1.4.0'
+        poetry config installer.modern-installation false
+        poetry install
+    - name: Test with pytest
+      run: |
+        poetry run pytest
+
+  # Use the `flake8` tool to check for syntax errors
+  flake8-linter:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install flake8
+      run: |
+        python -m pip install --upgrade pip 'poetry>=1.4.0'
+        poetry config installer.modern-installation false
         poetry install
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        poetry run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude="setup.py,test_*"
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
-      run: |
-        pytest
+        poetry run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --exclude="setup.py,test_*"

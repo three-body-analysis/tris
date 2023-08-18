@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tris"
-version = "0.0.1dev"
+version = "0.0.1"
 description = "An open-source screening system for Trinary Star Candidates."
 license = "MIT"
 authors = ["Vikram Ramanathan", "Prannaya Gupta <prannayagupta@programmer.net>", "Yap Yuan Xi", "Ernest Cheong"]
@@ -50,3 +50,12 @@ ghp-import = "^2.1.0"
 [build-system]
 requires = ["setuptools", "poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests"
+]
+filterwarnings = [
+    "error::ResourceWarning",
+    "error::UnitWarning"
+]
