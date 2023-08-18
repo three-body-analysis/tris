@@ -1,0 +1,14 @@
+name: trinary
+channels:
+  - defaults
+dependencies:
+  - python=3.9
+  - numpy<=1.24
+  - pandas
+  - scipy
+  - matplotlib
+  - astropy
+  - tqdm
+  - pip
+  - pip:
+      - wotan==1.10
