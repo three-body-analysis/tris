@@ -29,6 +29,7 @@ scipy = { version = ">=1.7", python = ">=3.8,<3.11" }
 matplotlib = ">=3.1"
 astropy = ">=5.0"
 requests = ">=2.22.0"
+wotan = "=1.10"
 urllib3 = { version = ">=1.23", python = ">=3.8,<4.0" }  # necessary to make requests work on py310
 tqdm = ">=4.25.0"
 
