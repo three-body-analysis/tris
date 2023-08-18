@@ -5,6 +5,7 @@ from glob import glob
 from pipeline.preproc import read
 
 import warnings
+
 warnings.filterwarnings("ignore")
 
 
@@ -19,7 +20,6 @@ class DataReadCase(unittest.TestCase):
                 tuple(df.columns), ("time", "flux"),
                 f"Columns don't match for {system}: Expected ('time', 'flux'), found {tuple(df.columns)}"
             )
-
 
 
 if __name__ == '__main__':

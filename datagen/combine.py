@@ -4,8 +4,6 @@ from tqdm import tqdm
 from multiprocessing import Pool
 import time
 
-# multiprocessing horrifically breaks this for some reason
-
 rear_codes = {
     "EB_Q0_long": "-2009131105131_llc.fits",
     "EB_Q1_long": "-2009166043257_llc.fits",
