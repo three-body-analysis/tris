@@ -2,6 +2,7 @@
 
 [![Python Package tests status](https://github.com/three-body-analysis/codebase/actions/workflows/python-package.yml/badge.svg)](https://github.com/three-body-analysis/codebase/actions?query=workflow%3Apython-package)
 [![Python Package using Conda tests status](https://github.com/three-body-analysis/codebase/actions/workflows/python-package-conda.yml/badge.svg)](https://github.com/three-body-analysis/codebase/actions?query=workflow%3Apython-package-conda)
+[![Docs CI status](https://github.com/three-body-analysis/codebase/actions/workflows/docs.yml/badge.svg)](https://github.com/three-body-analysis/codebase/actions?query=workflow%3Adocs)
 
 
 
