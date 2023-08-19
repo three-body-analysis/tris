@@ -6,9 +6,6 @@
 [![PyPI Latest Release](https://img.shields.io/pypi/v/tris.svg)](https://pypi.org/project/tris/)
 [![PyPI Downloads](https://static.pepy.tech/badge/tris)](https://pepy.tech/project/tris)
 
-[//]: # ([![PyPI Downloads]&#40;https://img.shields.io/pypi/dm/tris.svg?label=PyPI%20downloads&#41;]&#40;https://pypi.org/project/tris/&#41;)
-
-
 This repository comprises the codebase for our paper, "An Automated Screening System for Trinary Star System Candidates",
 that has been submitted to _Physica Scripta_.
 
