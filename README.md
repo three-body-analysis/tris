@@ -11,7 +11,7 @@
 This repository comprises the codebase for our paper, "An Automated Screening System for Trinary Star System Candidates",
 that has been submitted to _Physica Scripta_.
 
-**Tris** is an open-source tool that offers a specialized method to determine "observed-minus-computed" (OC) diagrams from 
+**Tris** (**Tri**nary **S**creener) is an open-source tool that offers a specialized method to determine "observed-minus-computed" (OC) diagrams from 
 astronomical flux time series data (lightcurves) obtained from NASA's Kepler and K2 missions.
 
 Here is a brief outline of the algorithm:
@@ -26,10 +26,10 @@ Basic Guide to Codebase
 
 [//]: # (- `data` - Contains the acquired `.fits` files that contain the light curves for all objects classified as EBs.)
 [//]: # (- `logbooks` - Personal Logbooks of us determining our ideal algorithm. It uses an older version of the codebase.)
+[//]: # (- `pipelining` - Older versions of `datagen`.)
 - `datagen` - Contains the data generation and acquisition scheme to get the files in `data`.
 - `docs` - Contains the documentation code for the codebase.
 - `notebooks` - Notebooks to test our code and visualise them, and also to give examples of usage
-- `pipelining` - Older versions of `datagen`.
 - `old` - Older versions of `tris`. Also contains logbooks of our work.
 - `tris` - Currently contains (early-stage) versions of our improved library code that will later be deployed on PyPI.
 - `manual_classification.xlsx` - Post Algorithm Manual Classification done by us.
