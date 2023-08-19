@@ -13,8 +13,8 @@ warnings.filterwarnings("ignore")
 
 class DataReadTestCase(unittest.TestCase):
     def test_read_df(self):
-        df = pd.read_csv("sample_data/processed.csv")
-        df_copy = pd.read_csv("sample_data/processed.csv")
+        df = pd.read_csv("tests/sample_data/processed.csv")
+        df_copy = pd.read_csv("tests/sample_data/processed.csv")
         df_copy["col0"] = np.linspace(0, 1000, df.shape[0])
         df_copy[["col1", "col2"]] = np.random.random((df.shape[0], 2))
 
@@ -45,30 +45,30 @@ class DataReadTestCase(unittest.TestCase):
         self.assertTrue(df.equals(df_test_index_name), "Index, Name Read Test (manipulated) Failed")
 
     def test_csv(self):
-        df = pd.read_csv("sample_data/processed.csv")
+        df = pd.read_csv("tests/sample_data/processed.csv")
 
-        df_test_full_index = read_csv("sample_data/processed.csv", 0, 1)
+        df_test_full_index = read_csv("tests/sample_data/processed.csv", 0, 1)
         self.assertTrue(df.equals(df_test_full_index), "Full Index Read Test (identity) Failed")
 
-        df_test_full_name = read_csv("sample_data/processed.csv", "time", "flux")
+        df_test_full_name = read_csv("tests/sample_data/processed.csv", "time", "flux")
         self.assertTrue(df.equals(df_test_full_name), "Full Name Read Test (identity) Failed")
 
-        df_test_name_index = read_csv("sample_data/processed.csv", "time", 1)
+        df_test_name_index = read_csv("tests/sample_data/processed.csv", "time", 1)
         self.assertTrue(df.equals(df_test_name_index), "Name, Index Read Test (identity) Failed")
 
-        df_test_index_name = read_csv("sample_data/processed.csv", 0, "flux")
+        df_test_index_name = read_csv("tests/sample_data/processed.csv", 0, "flux")
         self.assertTrue(df.equals(df_test_index_name), "Index, Name Read Test (identity) Failed")
 
-        df_test_full_index = read_csv("sample_data/manipulated.csv", 1, 3)
+        df_test_full_index = read_csv("tests/sample_data/manipulated.csv", 1, 3)
         self.assertTrue(df.equals(df_test_full_index), "Full Index Read Test (manipulated) Failed")
 
-        df_test_full_name = read_csv("sample_data/manipulated.csv", "time", "flux")
+        df_test_full_name = read_csv("tests/sample_data/manipulated.csv", "time", "flux")
         self.assertTrue(df.equals(df_test_full_name), "Full Name Read Test (manipulated) Failed")
 
-        df_test_name_index = read_csv("sample_data/manipulated.csv", "time", 3)
+        df_test_name_index = read_csv("tests/sample_data/manipulated.csv", "time", 3)
         self.assertTrue(df.equals(df_test_name_index), "Name, Index Read Test (manipulated) Failed")
 
-        df_test_index_name = read_csv("sample_data/manipulated.csv", 1, "flux")
+        df_test_index_name = read_csv("tests/sample_data/manipulated.csv", 1, "flux")
         self.assertTrue(df.equals(df_test_index_name), "Index, Name Read Test (manipulated) Failed")
 
     # def test_all(self):
