@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tris"
-version = "0.0.1"
+version = "0.0.2dev"
 description = "An open-source screening system for Trinary Star Candidates."
 license = "MIT"
 authors = ["Vikram Ramanathan", "Prannaya Gupta <prannayagupta@programmer.net>", "Yap Yuan Xi", "Ernest Cheong"]

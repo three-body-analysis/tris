@@ -1,6 +1,7 @@
 # tris/core.py
 
-from tris.preproc import read, detrend
+from tris.io import read
+from tris.preproc import detrend
 from tris.eclipses import find_eclipse_timings
 from tris.filter import complete_filter
 from tris.oc import get_oc
