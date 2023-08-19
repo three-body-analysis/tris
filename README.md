@@ -4,6 +4,7 @@
 [![Python Package using Conda tests status](https://github.com/three-body-analysis/codebase/actions/workflows/python-package-conda.yml/badge.svg)](https://github.com/three-body-analysis/codebase/actions?query=workflow%3Apython-package-conda)
 [![Docs CI status](https://github.com/three-body-analysis/codebase/actions/workflows/docs.yml/badge.svg)](https://three-body-analysis.github.io/codebase/)
 [![PyPI Latest Release](https://img.shields.io/pypi/v/tris.svg)](https://pypi.org/project/tris/)
+[![PyPI Downloads](https://static.pepy.tech/badge/tris)](https://pepy.tech/project/tris)
 
 [//]: # ([![PyPI Downloads]&#40;https://img.shields.io/pypi/dm/tris.svg?label=PyPI%20downloads&#41;]&#40;https://pypi.org/project/tris/&#41;)
 
