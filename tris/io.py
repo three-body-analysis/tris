@@ -38,6 +38,7 @@ def _preprocess_columns(df: pd.DataFrame, time: Union[int, str], flux: Union[int
 def read_df(df: pd.DataFrame, time: Union[str, int] = 0, flux: Union[str, int] = 1) -> pd.DataFrame:
     df = _preprocess_columns(df, time, flux)
     df.dropna(how="any", inplace=True)
+    df.reset_index(drop=True, inplace=True)
     return df
 
 
@@ -135,8 +136,19 @@ def read(
     Returns: pd.DataFrame Object with columns "time" and "flux"
     """
 
-    if isinstance(item, pd.DataFrame) or how == Read.DF:
+    if isinstance(item, pd.DataFrame) and how == Read.DF:
         return read_df(item, time, flux)
+
+    if isinstance(item, str) and how == Read.DF:
+        if item.endswith("fits"):
+            return read_fits(item, time, flux, **kwargs)
+        if item.endswith("csv"):
+            return read_csv(item, time, flux, **kwargs)
+        if item.endswith("json"):
+            return read_json(item, time, flux, **kwargs)
+        if item.endswith("excel"):
+            assert sheet is not None, "`sheet` variable should not be None."
+            return read_excel(item, time, flux, sheet, **kwargs)
 
     elif how == Read.FITS:
         return read_fits(item, time, flux, **kwargs)
