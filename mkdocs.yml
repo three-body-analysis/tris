@@ -71,6 +71,7 @@ nav:
     - Home: index.md
     - Library:
         - Installation: library/installation.md
+        - "Input/Output": library/io.md
 
 plugins:
     - mkdocs-jupyter
