@@ -95,28 +95,28 @@ class DataReadTestCase(unittest.TestCase):
         self.assertTrue(df.equals(df_test_name_name_name), "Name-Name-Name Read Test (identity) Failed")
 
         df_test_index_index_index = read_excel("tests/sample_data/manipulated.xlsx", 1, 3, 0)
-        self.assertTrue(df.equals(df_test_index_index_index), "Index-Index-Index Read Test (identity) Failed")
+        self.assertTrue(df.equals(df_test_index_index_index), "Index-Index-Index Read Test (manipulated) Failed")
 
         df_test_index_index_name = read_excel("tests/sample_data/manipulated.xlsx", 1, 3, "manipulated")
-        self.assertTrue(df.equals(df_test_index_index_name), "Index-Index-Name Read Test (identity) Failed")
+        self.assertTrue(df.equals(df_test_index_index_name), "Index-Index-Name Read Test (manipulated) Failed")
 
         df_test_index_name_index = read_excel("tests/sample_data/manipulated.xlsx", 1, "flux", 0)
-        self.assertTrue(df.equals(df_test_index_name_index), "Index-Name-Index Read Test (identity) Failed")
+        self.assertTrue(df.equals(df_test_index_name_index), "Index-Name-Index Read Test (manipulated) Failed")
 
         df_test_index_name_name = read_excel("tests/sample_data/manipulated.xlsx", 1, "flux", "manipulated")
-        self.assertTrue(df.equals(df_test_index_name_name), "Index-Name-Name Read Test (identity) Failed")
+        self.assertTrue(df.equals(df_test_index_name_name), "Index-Name-Name Read Test (manipulated) Failed")
 
         df_test_name_index_index = read_excel("tests/sample_data/manipulated.xlsx", "time", 3, 0)
-        self.assertTrue(df.equals(df_test_name_index_index), "Name-Index-Index Read Test (identity) Failed")
+        self.assertTrue(df.equals(df_test_name_index_index), "Name-Index-Index Read Test (manipulated) Failed")
 
         df_test_name_index_name = read_excel("tests/sample_data/manipulated.xlsx", "time", 3, "manipulated")
-        self.assertTrue(df.equals(df_test_name_index_name), "Name-Index-Name Read Test (identity) Failed")
+        self.assertTrue(df.equals(df_test_name_index_name), "Name-Index-Name Read Test (manipulated) Failed")
 
         df_test_name_name_index = read_excel("tests/sample_data/manipulated.xlsx", "time", "flux", 0)
-        self.assertTrue(df.equals(df_test_name_name_index), "Name-Name-Index Read Test (identity) Failed")
+        self.assertTrue(df.equals(df_test_name_name_index), "Name-Name-Index Read Test (manipulated) Failed")
 
         df_test_name_name_name = read_excel("tests/sample_data/manipulated.xlsx", "time", "flux", "manipulated")
-        self.assertTrue(df.equals(df_test_name_name_name), "Name-Name-Name Read Test (identity) Failed")
+        self.assertTrue(df.equals(df_test_name_name_name), "Name-Name-Name Read Test (manipulated) Failed")
 
     def test_json(self):
         df = pd.read_csv("tests/sample_data/processed.csv")
