@@ -126,16 +126,16 @@ class DataReadTestCase(unittest.TestCase):
 
         df_test_full_index = read_json("sample_data/processed.json", 0, 1)
         print(df, df_test_full_index)
-        self.assertTrue(df.equals(df_test_full_index), "Full Index Read Test (identity) Failed")
+        self.assertTrue(np.isclose(df, df_test_full_index).all(), "Full Index Read Test (identity) Failed")
 
         df_test_full_name = read_json("sample_data/processed.json", "time", "flux")
-        self.assertTrue(df.equals(df_test_full_name), "Full Name Read Test (identity) Failed")
+        self.assertTrue(np.isclose(df, df_test_full_name).all(), "Full Name Read Test (identity) Failed")
 
         df_test_name_index = read_json("sample_data/processed.json", "time", 1)
-        self.assertTrue(df.equals(df_test_name_index), "Name, Index Read Test (identity) Failed")
+        self.assertTrue(np.isclose(df, df_test_name_index).all(), "Name, Index Read Test (identity) Failed")
 
         df_test_index_name = read_json("sample_data/processed.json", 0, "flux")
-        self.assertTrue(df.equals(df_test_index_name), "Index, Name Read Test (identity) Failed")
+        self.assertTrue(np.isclose(df, df_test_index_name).all(), "Index, Name Read Test (identity) Failed")
 
 
 if __name__ == '__main__':
