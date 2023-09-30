@@ -5,8 +5,8 @@
 [![PyPI Latest Release](https://img.shields.io/pypi/v/tris.svg)](https://pypi.org/project/tris/)
 [![PyPI Downloads](https://static.pepy.tech/badge/tris)](https://pepy.tech/project/tris)
 
-This repository comprises the codebase for our paper, "An Automated Screening System for Trinary Star System Candidates",
-that has been submitted to _Physica Scripta_.
+This repository comprises the codebase for our paper, "Tris: A Screening System for Trinary Star System Candidates",
+that is in the process of being submitted to _The Astronomical Journal_.
 
 **Tris** (**Tri**nary **S**creener) is an open-source tool that offers a specialized method to determine "observed-minus-computed" (OC) diagrams from 
 astronomical flux time series data (lightcurves) obtained from NASA's Kepler and K2 missions.
@@ -101,6 +101,6 @@ $ poetry install
 ```
 
 
-> [!NOTE]  
+> [!WARNING]  
 > Note that this is part of a research work in the process of being published, hence this codebase will not be exceedingly updated. [Issues](https://github.com/three-body-analysis/codebase/issues) and [Pull Requests](https://github.com/three-body-analysis/codebase/pulls) are appreciated, so that we can work to make this library more usable by the larger astronomical community.
 
