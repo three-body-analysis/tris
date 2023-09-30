@@ -99,3 +99,8 @@ After this, you can use the following command to install this library:
 ```bash
 $ poetry install
 ```
+
+
+> [!NOTE]  
+> Note that this is part of a research work in the process of being published, hence this codebase will not be exceedingly updated. [Issues](https://github.com/three-body-analysis/codebase/issues) and [Pull Requests](https://github.com/three-body-analysis/codebase/pulls) are appreciated, so that we can work to make this library more usable by the larger astronomical community.
+
