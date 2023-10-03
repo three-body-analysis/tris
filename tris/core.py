@@ -11,7 +11,7 @@ __all__ = ["ideal_pipeline"]
 
 
 def ideal_pipeline(filepath: str):
-    df = detrend(read(filepath))
+    df = read(filepath)
     df = detrend(df)
     timings = find_eclipse_timings(df)
     timings = complete_filter(timings)
