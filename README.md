@@ -85,7 +85,7 @@ This stores a copy in the folder `tris`. You can then navigate into it using `cd
 
 #### Poetry
 
-This project can be used easily via a tool know as Poetry. This allows you to easily reflect edits made in the original 
+This project can be used easily via a tool known as Poetry. This allows you to easily reflect edits made in the original 
 source code! To install `poetry`, you can also install it using `pip` by typing in the command as follows:
 
 ```bash
@@ -102,5 +102,4 @@ $ poetry install
 
 
 > [!WARNING]  
-> Note that this is part of a research work in the process of being published, hence this codebase will not be exceedingly updated. [Issues](https://github.com/three-body-analysis/tris/issues) and [Pull Requests](https://github.com/three-body-analysis/tris/pulls) are appreciated, so that we can work to make this library more usable by the larger astronomical community.
-
+> Note that this is part of a research work in the process of being published, hence this repositry will likely not be exceedingly up-to-date. [Issues](https://github.com/three-body-analysis/tris/issues) and [Pull Requests](https://github.com/three-body-analysis/tris/pulls) are appreciated, so that we can work to make this library more useful by the larger astronomical community.
