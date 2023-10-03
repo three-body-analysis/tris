@@ -33,7 +33,7 @@ Basic Guide to Codebase
 
 Do note that in our codebase, you will see references to a `data/` folder. This folder contains the acquired `.fits` 
 files that contain the light curves for all objects classified as EBs. You can install this by running 
-`datagen/load.sh`.
+`datagen/load.sh` (from the project root).
 
 Documentation
 -------------
