@@ -9,7 +9,7 @@ from astropy.utils.exceptions import AstropyWarning
 from scipy import stats
 from scipy.fftpack import rfft, irfft, fftfreq
 
-from old.src.cpop import align_data, period_stupid_search
+from old.src.cpoc import align_data, period_stupid_search
 from old.src.eclipses import get_eclipses, get_threshold
 from old.src.handle_double_eclipses import remove_doubles
 from old.src.noise_filtering import remove_low_noise, remove_high_noise, remove_outliers

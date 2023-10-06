@@ -3,7 +3,7 @@ import warnings
 import matplotlib.pyplot as plt
 from astropy.utils.exceptions import AstropyWarning
 
-from old.src.cpop import getOC
+from old.src.cpoc import getOC
 from old.src.eclipses import get_eclipses
 from old.utils.set_dir_to_root import set_dir_to_root
 

@@ -63,6 +63,11 @@ if __name__ == "__main__":
     all_files = get_all_files("data/unzipped")
     print(all_files)
 
+    all_files = get_all_files("../data/unzipped")
+    with open("../data/all_systems.txt", "w+") as f:
+        for system in all_files:
+            f.write(f"{system}\n")
+
     now = time.time()
 
     with Pool(processes=6) as pool:

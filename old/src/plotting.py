@@ -34,12 +34,11 @@ def plot_curves(filename):
 
 
 if __name__ == "__main__":
-    set_dir_to_root()
 
     with open("data/all_systems.txt") as f:
-        all_systems = f.read().split(",")
+        all_systems = f.read().split("\n")
 
-    system_id = all_systems[181]
+    system_id = all_systems[259]
     print(system_id)
     fig, ax = plot_curves("data/combined/" + system_id)
     fig.show()
