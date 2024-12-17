@@ -9,5 +9,6 @@ __all__ = [
 
 
 def detrend(df, window_length: float = 0.5, method: str = "biweight") -> pd.DataFrame:
-    df.flux = wotan.flatten(df.time, df.flux, window_length=window_length, method=method)
-    return df
+    out = df.copy()
+    out.flux = wotan.flatten(df.time, df.flux, window_length=window_length, method=method)
+    return out

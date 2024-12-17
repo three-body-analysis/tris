@@ -47,7 +47,7 @@ def period_stupid_search(data, deltas):
     guess = initial_guess
     data = align_data(data, guess / 2)
 
-    change = 0.1
+    change = max(0.1, guess / 10)
     no_probes = 101
     max_dim = len(data)
     data = np.expand_dims(data, 1)
@@ -71,7 +71,7 @@ def period_stupid_search(data, deltas):
             guess = guess - guess * change / 2
         elif seed > no_probes // 2:
             guess = guess + guess * change / 2
-        change = change * 0.8
+        change = change * 0.85
         count = count + 1
     best = best * round(initial_guess / best, 0)
 
@@ -91,7 +91,7 @@ def align_data(data, new_offset):
     return data - data[0] + new_offset
 
 
-def getOC(eclipses, author="Vikram", return_diagnostics=False):
+def getOC(eclipses, return_diagnostics=False):
     """Using estimated period and offset, get the O-C values
 
     Args:
@@ -104,13 +104,7 @@ def getOC(eclipses, author="Vikram", return_diagnostics=False):
 
     filtered, diagnostics = complete_filter(eclipses, "delta", return_diagnositics=True)
 
-    if author == "Vikram":
-        period = period_stupid_search(filtered['time'], filtered['delta'])
-    elif author == "Yuan Xi":
-        period, offset = estimateConstantPeriod(filtered['time'])
-
-    else:
-        raise ValueError("Author must be vikram or yuan xi")
+    period = period_stupid_search(filtered['time'], filtered['delta'])
 
     period = period * round(filtered["delta"].median() / period, 0)
     filtered["residuals"] = align_data(filtered["time"], period / 2) % period - period / 2

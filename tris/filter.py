@@ -1,6 +1,7 @@
 # tris/filter.py
 import pandas as pd
 import wquantiles
+from matplotlib import pyplot as plt
 from scipy import stats
 import numpy as np
 from typing import Tuple, Union
@@ -37,10 +38,10 @@ def denoise_mask(delta: Union[pd.Series, np.ndarray]) -> np.ndarray:
         return np.ones_like(delta, dtype=bool)
 
 
-def outlier_filter_mask(delta: pd.Series, sigma: float = 5) -> np.ndarray:
+def outlier_filter_mask(delta: pd.Series, sigma: float = 4, iterations: int = 0) -> np.ndarray:
     # Here, the trimmed std is used to get the std of the central 80%
     # otherwise outliers skew the data to include themselves
-    std = stats.mstats.trimmed_std(delta)
+    std = stats.mstats.trimmed_std(delta, limits=(0.1 * (1 + iterations), (0.1 * (1 + iterations))))
     median = np.nanmedian(delta)
 
     thresh_lower = median - sigma * std
@@ -124,15 +125,61 @@ def double_filter_mask(delta, offset_attempts: int = 21) -> Tuple[np.ndarray, np
         return np.zeros_like(delta), np.ones_like(delta, dtype=bool), False
 
 
-def complete_filter(eclipses: pd.DataFrame, return_diagnostics=False) -> Union[
-    pd.DataFrame, Tuple[pd.DataFrame, Tuple[Union[int, bool]]]]:
+def maxima_masking(df, offset_attempts=21) -> Tuple[np.ndarray, bool]:
+    delta_range = df.delta.max() - df.delta.min()
+
+    binwidth_fractional = 0.13
+
+    no_bins = int(1 / binwidth_fractional)
+    binwidth = delta_range / no_bins
+
+    if binwidth < 0.2:
+        return np.ones_like(df.delta, dtype=bool), False
+
+    # Real binwidth
+    binwidth = delta_range / no_bins
+
+    # We try offsets in the spacing of 1/offset_attempts of the binwidth
+    offsets = np.arange(offset_attempts) * binwidth / (offset_attempts - 1)
+
+    results = np.zeros((offset_attempts, no_bins + 1))
+
+    for i, offset in enumerate(offsets):
+        counts, edges = np.histogram(
+            df.delta, bins=no_bins + 1,
+            range=(df.delta.min() - offset, df.delta.max() - offset + binwidth)
+        )
+
+        # +1 is used so that offset does not lead to eclipses being dropped
+        results[i, :] = counts
+
+    scores = np.sum(np.square(results), axis=1)
+
+    inverted = np.where(scores == np.max(scores))[0]
+    offset = offsets[inverted[inverted.shape[0] // 2]]
+
+    counts, edges = np.histogram(
+        df.delta, bins=no_bins + 1,
+        range=(df.delta.min() - offset, df.delta.max() - offset + binwidth)
+    )
+
+    # If one value clearly dominates, isolate eclipses in that region
+    if max(counts) * 2 > sum(counts):
+        return ((df["delta"] <= edges[np.argmax(counts) + 1] + binwidth / 2)
+                & (df["delta"] >= edges[np.argmax(counts)] - binwidth / 2)), True
+
+    return np.ones_like(df.delta, dtype=bool), False
+
+
+def complete_filter(eclipses: pd.DataFrame, iterations=0, return_diagnostics=False) -> Union[
+        pd.DataFrame, Tuple[pd.DataFrame, Tuple[Union[int, bool]]]]:
     diagnostics = []
 
     denoiser = denoise_mask(eclipses.delta)
     eclipses = eclipses[denoiser]
     diagnostics.append(int((~denoiser).sum()))
 
-    outlier_filter = outlier_filter_mask(eclipses.delta)
+    outlier_filter = outlier_filter_mask(eclipses.delta, iterations=iterations)
     eclipses = eclipses[outlier_filter]
     diagnostics.append(int((~outlier_filter).sum()))
 
@@ -141,6 +188,15 @@ def complete_filter(eclipses: pd.DataFrame, return_diagnostics=False) -> Union[
     eclipses: pd.DataFrame = eclipses[double_filter]
     diagnostics.append(handling_happened)
     diagnostics.append(int((~double_filter).sum()))
+
+    maxima_mask, handling_happened = maxima_masking(eclipses)
+    eclipses: pd.DataFrame = eclipses[maxima_mask]
+    diagnostics.append(handling_happened)
+    diagnostics.append(int((~maxima_mask).sum()))
+
+    outlier_filter = outlier_filter_mask(eclipses.delta, iterations=iterations)
+    eclipses = eclipses[outlier_filter]
+    diagnostics.append(int((~outlier_filter).sum()))
 
     eclipses.reset_index(drop=True, inplace=True)
 

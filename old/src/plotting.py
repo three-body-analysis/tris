@@ -22,7 +22,7 @@ def plot_curves(filename):
 
     fig, ax = plt.subplots(figsize=(12.8, 7.2))
 
-    ax.plot(times[:600], flattened_lc[:600], '-k', label='Detrended Flux')
+    ax.plot(times[:10000], flattened_lc[:10000], '-k', label='Detrended Flux')
     ax.plot(plt.axis()[:2], [threshold, threshold], "-b", linewidth=3)
 
     ax.set_title('Detrended Light Curve')
@@ -38,7 +38,7 @@ if __name__ == "__main__":
     with open("data/all_systems.txt") as f:
         all_systems = f.read().split("\n")
 
-    system_id = all_systems[259]
+    system_id = all_systems[99]
     print(system_id)
-    fig, ax = plot_curves("data/combined/" + system_id)
+    fig, ax = plot_curves("data/combined/" + system_id + ".fits")
     fig.show()
