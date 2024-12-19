@@ -38,4 +38,4 @@ def remove_periodic_noise(df: pd.DataFrame, cull_only_year = True, return_plot =
     if return_plot:
         return df, fig, ax
 
-    return df
+    return df, None, None

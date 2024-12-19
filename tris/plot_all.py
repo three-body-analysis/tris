@@ -10,6 +10,11 @@ import time
 from tris import complete_pipeline, compute_threshold
 
 
+def get_periods(kic):
+    _, _, period, _, _, _, _ = complete_pipeline(f"../data/combined/{kic}.fits", return_plot=False)
+    return period
+
+
 def plot_and_export_lightcurve(kic, threshold):
     df = Table.read(f"../data/combined/{kic}.fits", format="fits") # not using read() because of speed
 
@@ -78,13 +83,13 @@ if __name__ == "__main__":
     # with open("data/cpop_diagnostics.txt", "w") as out:
     #    out.write("noise,outliers,doubles,density\n")
 
-
-    start = 610
+    start = 0
     end = 2864
 
     # TODO if something breaks, remove this bit and see what it is
     warnings.filterwarnings('ignore', category=AstropyWarning, append=True)
 
+    out = ""
     for i in range(start, end + 1):
         if i % 10 == 0:
             print("\nProcessing Number " + str(i) + " at time " + str(round(time.time() - start_time, 1)) + "s")
@@ -92,7 +97,12 @@ if __name__ == "__main__":
 
         print(all_systems[i])
 
-        iterations, threshold = plot_and_export_cpoc(all_systems[i])
-        plot_and_export_lightcurve(all_systems[i], threshold)
+        period = get_periods(all_systems[i])
+        out += f"{period}\n"
+        #iterations, threshold = plot_and_export_cpoc(all_systems[i])
+        #plot_and_export_lightcurve(all_systems[i], threshold)
+
+    with open("../generated/all_periods.txt", "a") as estimates:
+        estimates.write(out)
 
     print("Final time: " + str(round(time.time() - start_time, 1)) + "s")

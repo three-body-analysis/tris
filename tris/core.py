@@ -11,7 +11,7 @@ from tris.periodic import remove_periodic_noise
 __all__ = ["complete_pipeline"]
 
 
-def complete_pipeline(filepath: str):
+def complete_pipeline(filepath: str, return_plot=True):
 
     df_master = read(filepath)
     df = detrend(df_master)
@@ -27,7 +27,8 @@ def complete_pipeline(filepath: str):
     oc_ft_filtered_temp = False
     if oc.shape[0] > 30:
         oc_ft_filtered = remove_periodic_noise(oc.copy(), cull_only_year=False)
-    oc, fig, ax = remove_periodic_noise(oc, cull_only_year=True, return_plot=True)
+    # fig and ax are null if return_plot is false
+    oc, fig, ax = remove_periodic_noise(oc, cull_only_year=True, return_plot=return_plot)
 
     iterations = 0
     while np.mean(np.abs(oc.residuals)) > 200 / 24 / 60 and iterations < 4:
@@ -44,7 +45,7 @@ def complete_pipeline(filepath: str):
         oc_temp, period_temp = get_oc(timings)
         if oc_temp.shape[0] > 30:
             oc_ft_filtered_temp = remove_periodic_noise(oc_temp.copy(), cull_only_year=False)
-        oc_temp, fig_temp, ax_temp = remove_periodic_noise(oc_temp, cull_only_year=True, return_plot=True)
+        oc_temp, fig_temp, ax_temp = remove_periodic_noise(oc_temp, cull_only_year=True, return_plot=return_plot)
 
         # Stop it from culling until there is nothing left
         if oc_temp.shape[0] < 9 or np.mean(np.abs(oc["residuals"])) * 1.2 < np.mean(np.abs(oc_temp["residuals"])):
