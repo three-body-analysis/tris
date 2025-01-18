@@ -91,7 +91,7 @@ def get_oc(df: pd.DataFrame) -> Tuple[pd.DataFrame, float]:
     residuals_temp, gradient = final_adjustment_for_linearity_trend(df.loc[:, "time"], df.loc[:, "residuals"])
 
     # If the corrected is better or close enough, take it. Else, ignore it
-    if np.mean(np.abs(df.residuals)) > np.mean(np.abs(residuals_temp)) * 0.999:
+    if np.mean(np.abs(df.residuals)) > np.mean(np.abs(residuals_temp)) * 0.99:
         df.loc[:, "residuals"] = residuals_temp
         period = period + gradient * period
 

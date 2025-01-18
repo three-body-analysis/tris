@@ -83,8 +83,8 @@ if __name__ == "__main__":
     # with open("data/cpop_diagnostics.txt", "w") as out:
     #    out.write("noise,outliers,doubles,density\n")
 
-    start = 0
-    end = 2864
+    start = 407
+    end = 407
 
     # TODO if something breaks, remove this bit and see what it is
     warnings.filterwarnings('ignore', category=AstropyWarning, append=True)
@@ -99,10 +99,10 @@ if __name__ == "__main__":
 
         period = get_periods(all_systems[i])
         out += f"{period}\n"
-        #iterations, threshold = plot_and_export_cpoc(all_systems[i])
-        #plot_and_export_lightcurve(all_systems[i], threshold)
+        iterations, threshold = plot_and_export_cpoc(all_systems[i])
+        plot_and_export_lightcurve(all_systems[i], threshold)
 
-    with open("../generated/all_periods.txt", "a") as estimates:
-        estimates.write(out)
+    #with open("../generated/all_periods.txt", "a") as estimates:
+        #estimates.write(out)
 
     print("Final time: " + str(round(time.time() - start_time, 1)) + "s")

@@ -26,7 +26,7 @@ def complete_pipeline(filepath: str, return_plot=True):
     oc_ft_filtered = False
     oc_ft_filtered_temp = False
     if oc.shape[0] > 30:
-        oc_ft_filtered = remove_periodic_noise(oc.copy(), cull_only_year=False)
+        oc_ft_filtered, _, _ = remove_periodic_noise(oc.copy(), cull_only_year=False)
     # fig and ax are null if return_plot is false
     oc, fig, ax = remove_periodic_noise(oc, cull_only_year=True, return_plot=return_plot)
 
@@ -44,7 +44,7 @@ def complete_pipeline(filepath: str, return_plot=True):
         timings = complete_filter(timings, iterations)
         oc_temp, period_temp = get_oc(timings)
         if oc_temp.shape[0] > 30:
-            oc_ft_filtered_temp = remove_periodic_noise(oc_temp.copy(), cull_only_year=False)
+            oc_ft_filtered_temp, _, _ = remove_periodic_noise(oc_temp.copy(), cull_only_year=False)
         oc_temp, fig_temp, ax_temp = remove_periodic_noise(oc_temp, cull_only_year=True, return_plot=return_plot)
 
         # Stop it from culling until there is nothing left
